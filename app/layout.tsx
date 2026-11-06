@@ -3,6 +3,8 @@ import { Cormorant_Garamond, Inter } from 'next/font/google'
 import { Navigation } from '@/components/Navigation'
 import { SmoothScrollProvider } from '@/components/SmoothScrollProvider'
 import { GrainOverlay } from '@/components/GrainOverlay'
+import { CursorGlow } from '@/components/CursorGlow'
+import { ScrollProgress } from '@/components/ScrollProgress'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -45,6 +47,8 @@ export default function RootLayout({
       <body>
         <SmoothScrollProvider>
           <GrainOverlay />
+          <CursorGlow />
+          <ScrollProgress />
           <Navigation />
           <main>{children}</main>
         </SmoothScrollProvider>

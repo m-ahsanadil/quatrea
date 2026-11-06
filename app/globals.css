@@ -97,12 +97,8 @@ h1, h2, h3 {
     transform: translateY(0) translateX(0);
     opacity: 0;
   }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
   100% {
     transform: translateY(-120vh) translateX(var(--drift, 0px));
     opacity: 0;
@@ -119,19 +115,87 @@ h1, h2, h3 {
   50%      { opacity: 0.7; transform: scale(1.05); }
 }
 
-@keyframes rotateOrb {
-  from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-  to   { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
-}
-
 @keyframes marqueeScroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
 }
 
-@keyframes borderGlow {
-  0%, 100% { opacity: 0.3; }
-  50%      { opacity: 0.7; }
+@keyframes meshDrift {
+  0%   { transform: translate(0%, 0%) scale(1); }
+  25%  { transform: translate(3%, -4%) scale(1.02); }
+  50%  { transform: translate(-2%, 3%) scale(0.98); }
+  75%  { transform: translate(4%, 1%) scale(1.01); }
+  100% { transform: translate(0%, 0%) scale(1); }
+}
+
+@keyframes meshDrift2 {
+  0%   { transform: translate(0%, 0%) rotate(0deg); }
+  33%  { transform: translate(-4%, 3%) rotate(1deg); }
+  66%  { transform: translate(3%, -2%) rotate(-0.5deg); }
+  100% { transform: translate(0%, 0%) rotate(0deg); }
+}
+
+@keyframes meshDrift3 {
+  0%   { transform: translate(0%, 0%) scale(1); }
+  50%  { transform: translate(5%, -5%) scale(1.05); }
+  100% { transform: translate(0%, 0%) scale(1); }
+}
+
+@keyframes borderRotate {
+  from { --border-angle: 0deg; }
+  to   { --border-angle: 360deg; }
+}
+
+@keyframes softPulse {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 0.8; }
+}
+
+@keyframes revealUp {
+  from { clip-path: inset(100% 0 0 0); }
+  to   { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.3; }
+  50%      { transform: scale(1.15); opacity: 0.5; }
+}
+
+/* ─── Animated mesh background ─── */
+.mesh-bg {
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+}
+
+.mesh-bg .mesh-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.mesh-bg .mesh-orb:nth-child(1) {
+  width: 50%;
+  height: 50%;
+  top: 20%;
+  left: 25%;
+  animation: meshDrift 20s ease-in-out infinite;
+}
+
+.mesh-bg .mesh-orb:nth-child(2) {
+  width: 40%;
+  height: 40%;
+  top: 40%;
+  left: 10%;
+  animation: meshDrift2 25s ease-in-out infinite;
+}
+
+.mesh-bg .mesh-orb:nth-child(3) {
+  width: 35%;
+  height: 45%;
+  top: 15%;
+  left: 55%;
+  animation: meshDrift3 18s ease-in-out infinite;
 }
 
 /* ─── Glass panels ─── */
@@ -141,20 +205,48 @@ h1, h2, h3 {
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.glass-panel-light {
-  background: rgba(44, 36, 32, 0.03);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(44, 36, 32, 0.06);
-}
-
 /* ─── Card hover system ─── */
 .luxury-card {
-  transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.6s ease,
+              border-color 0.6s ease;
 }
 
 .luxury-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.45);
+}
+
+/* ─── Gradient border cards ─── */
+.gradient-border-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.gradient-border-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(201, 168, 108, 0.0) 0%,
+    rgba(201, 168, 108, 0.15) 50%,
+    rgba(201, 168, 108, 0.0) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.gradient-border-card:hover::before {
+  opacity: 1;
 }
 
 /* ─── Shimmer text ─── */
@@ -185,6 +277,41 @@ h1, h2, h3 {
   animation-play-state: paused;
 }
 
+/* ─── Magnetic button ─── */
+.magnetic-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.magnetic-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.magnetic-btn:hover::before {
+  opacity: 1;
+}
+
+.magnetic-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: scaleX(0);
+  transition: transform 0.5s ease;
+}
+
+.magnetic-btn:hover::after {
+  transform: scaleX(1);
+}
+
 /* ─── Glow ring ─── */
 .glow-ring {
   position: absolute;
@@ -193,6 +320,11 @@ h1, h2, h3 {
   opacity: 0.15;
   animation: pulseGlow 4s ease-in-out infinite;
   pointer-events: none;
+}
+
+/* ─── Breathing orb ─── */
+.breathing-orb {
+  animation: breathe 6s ease-in-out infinite;
 }
 
 /* ─── Utility ─── */
@@ -226,11 +358,7 @@ h1, h2, h3 {
     transition-duration: 0.01ms !important;
   }
 
-  .marquee-track {
-    animation: none;
-  }
-
-  .floating-particle {
-    display: none;
-  }
+  .marquee-track { animation: none; }
+  .floating-particle { display: none; }
+  .mesh-bg .mesh-orb { animation: none; }
 }

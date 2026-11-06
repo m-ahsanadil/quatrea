@@ -24,76 +24,75 @@ export default function HomePage() {
       gsap.registerPlugin(ScrollTrigger)
 
       ctx = gsap.context(() => {
-        const heroTl = gsap.timeline({ delay: 0.3 })
+        const heroTl = gsap.timeline({ delay: 0.4 })
 
         heroTl
           .fromTo('.hero-ornament-top', { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: 'power2.out' })
           .fromTo('.hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.3')
           .fromTo(
             '.hero-letter',
-            { yPercent: 120, opacity: 0, rotateX: 40 },
-            { yPercent: 0, opacity: 1, rotateX: 0, duration: 1.3, ease: 'expo.out', stagger: 0.04 },
+            { yPercent: 130, opacity: 0, rotateX: 50 },
+            { yPercent: 0, opacity: 1, rotateX: 0, duration: 1.4, ease: 'expo.out', stagger: 0.035 },
             '-=0.2',
           )
-          .fromTo('.hero-divider', { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }, '-=0.4')
+          .fromTo('.hero-divider', { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.7, ease: 'power2.out' }, '-=0.5')
           .fromTo('.hero-tagline', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.3')
-          .fromTo('.hero-cta', { opacity: 0, y: 20, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power2.out' }, '-=0.4')
+          .fromTo('.hero-cta', { opacity: 0, y: 24, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.8, ease: 'power2.out' }, '-=0.4')
           .fromTo('.hero-scroll-line', { scaleY: 0 }, { scaleY: 1, duration: 1.2, ease: 'power2.out', transformOrigin: 'top' }, '-=0.5')
 
-        gsap.to('.hero-glow-1', {
-          yPercent: 30,
-          ease: 'none',
-          scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: true },
-        })
-        gsap.to('.hero-glow-2', {
-          yPercent: -20,
-          xPercent: 10,
+        /* Hero parallax */
+        gsap.to('.hero-mesh', {
+          yPercent: 20,
           ease: 'none',
           scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: true },
         })
         gsap.to('.hero-content', {
-          yPercent: 25,
+          yPercent: 30,
           opacity: 0,
           ease: 'none',
-          scrollTrigger: { trigger: '.hero-section', start: 'top top', end: '70% top', scrub: true },
+          scrollTrigger: { trigger: '.hero-section', start: 'top top', end: '65% top', scrub: true },
         })
 
+        /* Marquee */
         gsap.fromTo('.marquee-section', { opacity: 0 }, {
-          opacity: 1,
-          duration: 1,
+          opacity: 1, duration: 1,
           scrollTrigger: { trigger: '.marquee-section', start: 'top 90%' },
         })
 
+        /* Cinematic quote */
+        gsap.fromTo('.cine-quote-line', { scaleX: 0 }, {
+          scaleX: 1, duration: 1.5, ease: 'power2.out',
+          scrollTrigger: { trigger: '.cine-quote', start: 'top 80%' },
+        })
+        gsap.fromTo('.cine-quote-text', { opacity: 0, y: 40 }, {
+          opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+          scrollTrigger: { trigger: '.cine-quote', start: 'top 78%' },
+        })
+
+        /* Season cards */
         gsap.fromTo(
           '.season-card',
-          { opacity: 0, y: isMobile ? 50 : 100, scale: 0.95 },
+          { opacity: 0, y: isMobile ? 50 : 120, scale: 0.92 },
           {
             opacity: 1, y: 0, scale: 1,
-            duration: 1.1,
-            stagger: 0.15,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: '.seasons-grid', start: 'top 82%' },
+            duration: 1.2, stagger: 0.15, ease: 'expo.out',
+            scrollTrigger: { trigger: '.seasons-grid', start: 'top 85%' },
           },
         )
 
-        if (!isMobile) {
-          document.querySelectorAll<HTMLElement>('.season-card').forEach((card) => {
-            gsap.to(card.querySelector('.card-glow'), {
-              opacity: 0.6,
-              scale: 1.1,
-              duration: 0.4,
-              paused: true,
-              scrollTrigger: undefined,
-            })
-          })
-        }
+        /* Bottles */
+        gsap.fromTo('.bottle-showcase-item', { opacity: 0, y: 70 }, {
+          opacity: 1, y: 0, duration: 1, stagger: 0.12, ease: 'power3.out',
+          scrollTrigger: { trigger: '.bottle-showcase', start: 'top 78%' },
+        })
 
+        /* Philosophy */
         gsap.fromTo('.philosophy-line', { scaleX: 0 }, {
           scaleX: 1, duration: 1.2, ease: 'power2.out',
           scrollTrigger: { trigger: '.philosophy-section', start: 'top 78%' },
         })
-        gsap.fromTo('.philosophy-heading', { opacity: 0, y: 60 }, {
-          opacity: 1, y: 0, duration: 1.2, ease: 'power3.out',
+        gsap.fromTo('.philosophy-heading', { opacity: 0, y: 70 }, {
+          opacity: 1, y: 0, duration: 1.3, ease: 'power3.out',
           scrollTrigger: { trigger: '.philosophy-section', start: 'top 75%' },
         })
         gsap.fromTo('.philosophy-text', { opacity: 0, y: 30 }, {
@@ -103,11 +102,6 @@ export default function HomePage() {
         gsap.fromTo('.philosophy-cta', { opacity: 0 }, {
           opacity: 1, duration: 0.8, delay: 0.3,
           scrollTrigger: { trigger: '.philosophy-section', start: 'top 75%' },
-        })
-
-        gsap.fromTo('.bottle-showcase-item', { opacity: 0, y: 60 }, {
-          opacity: 1, y: 0, duration: 0.9, stagger: 0.12, ease: 'power3.out',
-          scrollTrigger: { trigger: '.bottle-showcase', start: 'top 78%' },
         })
       }, containerRef)
     }
@@ -134,48 +128,23 @@ export default function HomePage() {
           overflow: 'hidden',
         }}
       >
-        {/* Multiple glow layers for depth */}
-        <div
-          className="hero-glow-1"
-          aria-hidden
-          style={{
-            position: 'absolute',
-            inset: '-30%',
-            background: 'radial-gradient(ellipse 50% 40% at 50% 45%, rgba(201,168,108,0.1) 0%, transparent 60%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          className="hero-glow-2"
-          aria-hidden
-          style={{
-            position: 'absolute',
-            inset: '-20%',
-            background: 'radial-gradient(ellipse 30% 50% at 25% 55%, rgba(201,168,108,0.05) 0%, transparent 50%)',
-            pointerEvents: 'none',
-          }}
-        />
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            inset: '-20%',
-            background: 'radial-gradient(ellipse 25% 35% at 75% 40%, rgba(201,168,108,0.04) 0%, transparent 50%)',
-            pointerEvents: 'none',
-          }}
-        />
+        {/* Animated mesh background */}
+        <div className="mesh-bg hero-mesh" aria-hidden>
+          <div className="mesh-orb" style={{ background: 'radial-gradient(circle, rgba(201,168,108,0.12) 0%, transparent 70%)' }} />
+          <div className="mesh-orb" style={{ background: 'radial-gradient(circle, rgba(201,168,108,0.06) 0%, transparent 60%)' }} />
+          <div className="mesh-orb" style={{ background: 'radial-gradient(circle, rgba(180,150,90,0.08) 0%, transparent 65%)' }} />
+        </div>
 
-        <FloatingParticles color="#C9A86C" count={25} />
+        <FloatingParticles color="#C9A86C" count={30} />
 
-        <div className="hero-content" style={{ position: 'relative', zIndex: 1, maxWidth: '1000px', width: '100%' }}>
-          {/* Ornamental line */}
+        <div className="hero-content" style={{ position: 'relative', zIndex: 1, maxWidth: '1100px', width: '100%' }}>
           <div
             className="hero-ornament-top"
             style={{
-              width: '80px',
+              width: '100px',
               height: '1px',
               background: 'linear-gradient(to right, transparent, #C9A86C, transparent)',
-              margin: '0 auto 2rem',
+              margin: '0 auto 2.5rem',
               transformOrigin: 'center',
             }}
           />
@@ -184,49 +153,43 @@ export default function HomePage() {
             className="hero-eyebrow"
             style={{
               fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: 'clamp(0.55rem, 1vw, 0.65rem)',
-              letterSpacing: '0.4em',
+              fontSize: 'clamp(0.5rem, 0.9vw, 0.6rem)',
+              letterSpacing: '0.5em',
               textTransform: 'uppercase',
               color: '#C9A86C',
-              marginBottom: '2.5rem',
+              marginBottom: '3rem',
               opacity: 0,
             }}
           >
             Luxury Fragrance · Est. MMXXIV
           </p>
 
-          {/* Main title */}
           <h1
             style={{
               fontFamily: 'var(--font-cormorant), Georgia, serif',
-              fontSize: 'clamp(5.5rem, 18vw, 16rem)',
+              fontSize: 'clamp(6rem, 20vw, 18rem)',
               fontWeight: 300,
-              lineHeight: 0.85,
-              letterSpacing: '-0.04em',
+              lineHeight: 0.82,
+              letterSpacing: '-0.05em',
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
-              gap: '0 0.04em',
+              gap: '0 0.03em',
               overflow: 'hidden',
-              perspective: '600px',
+              perspective: '800px',
             }}
           >
             {'QUATRÉA'.split('').map((char, i) => (
               <span
                 key={i}
                 className="hero-letter"
-                style={{
-                  display: 'inline-block',
-                  opacity: 0,
-                  willChange: 'transform',
-                }}
+                style={{ display: 'inline-block', opacity: 0, willChange: 'transform' }}
               >
                 {char}
               </span>
             ))}
           </h1>
 
-          {/* Decorative divider */}
           <div className="hero-divider" style={{ opacity: 0, transformOrigin: 'center' }}>
             <Divider />
           </div>
@@ -235,8 +198,8 @@ export default function HomePage() {
             className="hero-tagline"
             style={{
               fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: 'clamp(0.65rem, 1.2vw, 0.8rem)',
-              letterSpacing: '0.25em',
+              fontSize: 'clamp(0.6rem, 1.1vw, 0.75rem)',
+              letterSpacing: '0.3em',
               textTransform: 'uppercase',
               color: '#F5F0E8',
               opacity: 0,
@@ -246,22 +209,20 @@ export default function HomePage() {
             Four Seasons&nbsp;&nbsp;·&nbsp;&nbsp;Four Essences&nbsp;&nbsp;·&nbsp;&nbsp;One World
           </p>
 
-          <div className="hero-cta" style={{ marginTop: '3.5rem', opacity: 0 }}>
+          <div className="hero-cta" style={{ marginTop: '4rem', opacity: 0 }}>
             <Link
               href="/spring"
-              className="luxury-card"
+              className="magnetic-btn"
               style={{
                 display: 'inline-block',
                 fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                fontSize: '0.65rem',
-                letterSpacing: '0.25em',
+                fontSize: '0.6rem',
+                letterSpacing: '0.3em',
                 textTransform: 'uppercase',
                 color: '#050505',
                 background: 'linear-gradient(135deg, #C9A86C 0%, #E0C88C 50%, #C9A86C 100%)',
-                padding: '1rem 3rem',
+                padding: '1.1rem 3.5rem',
                 textDecoration: 'none',
-                position: 'relative',
-                overflow: 'hidden',
               }}
             >
               Explore the Collection
@@ -286,11 +247,11 @@ export default function HomePage() {
           <span
             style={{
               fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: '0.5rem',
-              letterSpacing: '0.35em',
+              fontSize: '0.45rem',
+              letterSpacing: '0.4em',
               textTransform: 'uppercase',
               color: '#F5F0E8',
-              opacity: 0.25,
+              opacity: 0.2,
             }}
           >
             Discover
@@ -299,8 +260,8 @@ export default function HomePage() {
             className="hero-scroll-line"
             style={{
               width: '1px',
-              height: '60px',
-              background: 'linear-gradient(to bottom, rgba(201,168,108,0.6), transparent)',
+              height: '70px',
+              background: 'linear-gradient(to bottom, rgba(201,168,108,0.5), transparent)',
               transformOrigin: 'top',
             }}
           />
@@ -311,9 +272,9 @@ export default function HomePage() {
       <section
         className="marquee-section"
         style={{
-          padding: '3rem 0',
-          borderTop: '1px solid rgba(245,240,232,0.05)',
-          borderBottom: '1px solid rgba(245,240,232,0.05)',
+          padding: '2.5rem 0',
+          borderTop: '1px solid rgba(245,240,232,0.04)',
+          borderBottom: '1px solid rgba(245,240,232,0.04)',
           overflow: 'hidden',
           opacity: 0,
         }}
@@ -324,11 +285,11 @@ export default function HomePage() {
               key={i}
               style={{
                 fontFamily: 'var(--font-cormorant), Georgia, serif',
-                fontSize: 'clamp(1.8rem, 4vw, 3rem)',
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                 fontWeight: 300,
                 color: '#F5F0E8',
-                opacity: 0.08,
-                letterSpacing: '0.15em',
+                opacity: 0.06,
+                letterSpacing: '0.18em',
                 paddingRight: '0.5em',
               }}
             >
@@ -338,10 +299,81 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══ Cinematic Quote ═══ */}
+      <section
+        className="cine-quote"
+        style={{
+          padding: 'clamp(100px, 14vw, 200px) clamp(16px, 8vw, 120px)',
+          textAlign: 'center',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute',
+            inset: '-30%',
+            background: 'radial-gradient(ellipse 40% 40% at 50% 50%, rgba(201,168,108,0.04) 0%, transparent 60%)',
+            pointerEvents: 'none',
+          }}
+        />
+        <div style={{ position: 'relative', maxWidth: '750px', margin: '0 auto' }}>
+          <div
+            className="cine-quote-line"
+            style={{
+              width: '120px',
+              height: '1px',
+              background: 'linear-gradient(to right, transparent, #C9A86C, transparent)',
+              margin: '0 auto 3rem',
+              transformOrigin: 'center',
+            }}
+          />
+          <blockquote
+            className="cine-quote-text"
+            style={{
+              fontFamily: 'var(--font-cormorant), Georgia, serif',
+              fontSize: 'clamp(1.6rem, 3.5vw, 2.8rem)',
+              fontWeight: 300,
+              fontStyle: 'italic',
+              lineHeight: 1.4,
+              color: '#F5F0E8',
+              opacity: 0,
+            }}
+          >
+            &ldquo;We do not recreate seasons — we translate their emotional architecture into scent.&rdquo;
+          </blockquote>
+          <div
+            className="cine-quote-line"
+            style={{
+              width: '120px',
+              height: '1px',
+              background: 'linear-gradient(to right, transparent, #C9A86C, transparent)',
+              margin: '3rem auto 0',
+              transformOrigin: 'center',
+            }}
+          />
+          <p
+            className="cine-quote-text"
+            style={{
+              fontFamily: 'var(--font-inter), system-ui, sans-serif',
+              fontSize: '0.6rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: '#C9A86C',
+              opacity: 0,
+              marginTop: '2rem',
+            }}
+          >
+            Maison Quatréa
+          </p>
+        </div>
+      </section>
+
       {/* ═══ Collection Grid ═══ */}
       <section
         style={{
-          padding: 'clamp(100px, 14vw, 200px) clamp(16px, 5vw, 60px)',
+          padding: 'clamp(60px, 8vw, 100px) clamp(16px, 5vw, 60px)',
         }}
       >
         <div
@@ -359,11 +391,11 @@ export default function HomePage() {
             <p
               style={{
                 fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                fontSize: '0.6rem',
-                letterSpacing: '0.35em',
+                fontSize: '0.55rem',
+                letterSpacing: '0.4em',
                 textTransform: 'uppercase',
                 color: '#C9A86C',
-                opacity: 0.7,
+                opacity: 0.6,
                 marginBottom: '0.75rem',
               }}
             >
@@ -372,7 +404,7 @@ export default function HomePage() {
             <h2
               style={{
                 fontFamily: 'var(--font-cormorant), Georgia, serif',
-                fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+                fontSize: 'clamp(2.2rem, 4.5vw, 4rem)',
                 fontWeight: 300,
                 lineHeight: 1,
                 color: '#F5F0E8',
@@ -384,10 +416,10 @@ export default function HomePage() {
           <p
             style={{
               fontFamily: 'var(--font-cormorant), Georgia, serif',
-              fontSize: 'clamp(0.95rem, 1.6vw, 1.2rem)',
+              fontSize: 'clamp(0.9rem, 1.4vw, 1.1rem)',
               fontStyle: 'italic',
               color: '#F5F0E8',
-              opacity: 0.35,
+              opacity: 0.3,
             }}
           >
             Each a universe unto itself
@@ -426,20 +458,19 @@ export default function HomePage() {
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: `radial-gradient(ellipse 60% 50% at 50% 60%, ${season.colors.accent}22 0%, transparent 70%)`,
+                    background: `radial-gradient(ellipse 80% 60% at 50% 70%, ${season.colors.accent}33 0%, transparent 70%)`,
                     opacity: 0,
-                    transition: 'opacity 0.6s ease',
+                    transition: 'opacity 0.7s ease',
                     pointerEvents: 'none',
                   }}
                 />
 
-                {/* Gradient overlay for readability */}
+                {/* Gradient bottom overlay */}
                 <div
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'linear-gradient(180deg, transparent 20%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.6) 100%)',
-                    transition: 'background 0.4s ease',
+                    background: 'linear-gradient(180deg, transparent 15%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 100%)',
                     pointerEvents: 'none',
                   }}
                 />
@@ -448,14 +479,14 @@ export default function HomePage() {
                 <div
                   style={{
                     position: 'absolute',
-                    top: '1.5rem',
-                    right: '1.5rem',
+                    top: '1rem',
+                    right: '1.2rem',
                     fontFamily: 'var(--font-cormorant), Georgia, serif',
-                    fontSize: 'clamp(5rem, 10vw, 8rem)',
+                    fontSize: 'clamp(5rem, 12vw, 9rem)',
                     fontWeight: 300,
                     lineHeight: 1,
                     color: '#fff',
-                    opacity: 0.06,
+                    opacity: 0.04,
                     pointerEvents: 'none',
                   }}
                 >
@@ -475,11 +506,11 @@ export default function HomePage() {
                   <span
                     style={{
                       fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                      fontSize: '0.55rem',
-                      letterSpacing: '0.3em',
+                      fontSize: '0.5rem',
+                      letterSpacing: '0.35em',
                       textTransform: 'uppercase',
                       color: '#fff',
-                      opacity: 0.5,
+                      opacity: 0.45,
                       marginBottom: '0.75rem',
                     }}
                   >
@@ -488,10 +519,10 @@ export default function HomePage() {
                   <h2
                     style={{
                       fontFamily: 'var(--font-cormorant), Georgia, serif',
-                      fontSize: 'clamp(2.2rem, 4.5vw, 3rem)',
+                      fontSize: 'clamp(2.5rem, 5vw, 3.5rem)',
                       fontWeight: 300,
                       color: '#fff',
-                      lineHeight: 0.95,
+                      lineHeight: 0.92,
                       marginBottom: '0.5rem',
                     }}
                   >
@@ -502,31 +533,22 @@ export default function HomePage() {
                       fontFamily: 'var(--font-cormorant), Georgia, serif',
                       fontSize: 'clamp(1rem, 1.8vw, 1.2rem)',
                       fontStyle: 'italic',
-                      letterSpacing: '0.04em',
                       color: '#fff',
-                      opacity: 0.7,
+                      opacity: 0.65,
                       marginBottom: '1.5rem',
                     }}
                   >
                     {season.perfume}
                   </p>
-                  <div
-                    style={{
-                      width: '32px',
-                      height: '1px',
-                      background: '#fff',
-                      opacity: 0.3,
-                      marginBottom: '1rem',
-                    }}
-                  />
+                  <div style={{ width: '40px', height: '1px', background: '#fff', opacity: 0.25, marginBottom: '1.2rem' }} />
                   <span
                     style={{
                       fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                      fontSize: '0.6rem',
-                      letterSpacing: '0.2em',
+                      fontSize: '0.55rem',
+                      letterSpacing: '0.25em',
                       textTransform: 'uppercase',
                       color: '#fff',
-                      opacity: 0.45,
+                      opacity: 0.4,
                     }}
                   >
                     Discover →
@@ -542,18 +564,30 @@ export default function HomePage() {
       <section
         className="bottle-showcase"
         style={{
-          padding: 'clamp(60px, 8vw, 100px) clamp(16px, 5vw, 60px)',
-          borderTop: '1px solid rgba(245,240,232,0.06)',
-          borderBottom: '1px solid rgba(245,240,232,0.06)',
+          padding: 'clamp(80px, 10vw, 140px) clamp(16px, 5vw, 60px)',
+          borderTop: '1px solid rgba(245,240,232,0.04)',
+          borderBottom: '1px solid rgba(245,240,232,0.04)',
+          position: 'relative',
+          overflow: 'hidden',
         }}
       >
+        <div
+          aria-hidden
+          style={{
+            position: 'absolute',
+            inset: '-20%',
+            background: 'radial-gradient(ellipse 50% 50% at 50% 50%, rgba(201,168,108,0.03) 0%, transparent 60%)',
+            pointerEvents: 'none',
+          }}
+        />
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 'clamp(1rem, 3vw, 3rem)',
-            maxWidth: '900px',
+            gap: 'clamp(1.5rem, 4vw, 4rem)',
+            maxWidth: '1000px',
             margin: '0 auto',
+            position: 'relative',
           }}
         >
           {SEASON_KEYS.map((key) => {
@@ -562,34 +596,46 @@ export default function HomePage() {
               <Link
                 key={key}
                 href={`/${key}`}
-                className="bottle-showcase-item luxury-card"
+                className="bottle-showcase-item gradient-border-card luxury-card"
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
                   textDecoration: 'none',
-                  padding: '2rem 1rem',
+                  padding: '2.5rem 1rem 2rem',
                   borderRadius: '2px',
-                  background: 'rgba(255,255,255,0.02)',
                   border: '1px solid rgba(255,255,255,0.04)',
-                  transition: 'background 0.4s ease, border-color 0.4s ease',
+                  transition: 'background 0.5s ease, border-color 0.5s ease',
                 }}
               >
-                <PerfumeBottle
-                  perfumeName={season.perfume}
-                  seasonName={season.name}
-                  accentColor={season.colors.accent}
-                  style={{
-                    width: 'clamp(50px, 8vw, 80px)',
-                    height: 'auto',
-                    filter: `drop-shadow(0 10px 30px ${season.colors.accent}33)`,
-                    marginBottom: '1.5rem',
-                  }}
-                />
+                <div style={{ position: 'relative', marginBottom: '2rem' }}>
+                  {/* Breathing glow behind bottle */}
+                  <div
+                    className="breathing-orb"
+                    aria-hidden
+                    style={{
+                      position: 'absolute',
+                      inset: '-30%',
+                      borderRadius: '50%',
+                      background: `radial-gradient(circle, ${season.colors.accent}15 0%, transparent 70%)`,
+                    }}
+                  />
+                  <PerfumeBottle
+                    perfumeName={season.perfume}
+                    seasonName={season.name}
+                    accentColor={season.colors.accent}
+                    style={{
+                      width: 'clamp(55px, 9vw, 90px)',
+                      height: 'auto',
+                      filter: `drop-shadow(0 15px 40px ${season.colors.accent}33)`,
+                      position: 'relative',
+                    }}
+                  />
+                </div>
                 <span
                   style={{
                     fontFamily: 'var(--font-cormorant), Georgia, serif',
-                    fontSize: 'clamp(0.85rem, 1.4vw, 1.05rem)',
+                    fontSize: 'clamp(0.9rem, 1.4vw, 1.1rem)',
                     color: '#F5F0E8',
                     opacity: 0.7,
                     letterSpacing: '0.06em',
@@ -600,12 +646,12 @@ export default function HomePage() {
                 <span
                   style={{
                     fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                    fontSize: '0.55rem',
-                    letterSpacing: '0.2em',
+                    fontSize: '0.5rem',
+                    letterSpacing: '0.25em',
                     textTransform: 'uppercase',
                     color: season.colors.accent,
-                    opacity: 0.5,
-                    marginTop: '0.4rem',
+                    opacity: 0.45,
+                    marginTop: '0.5rem',
                   }}
                 >
                   {season.name}
@@ -620,20 +666,15 @@ export default function HomePage() {
       <section
         className="philosophy-section"
         style={{
-          padding: 'clamp(100px, 14vw, 200px) clamp(16px, 8vw, 120px)',
+          padding: 'clamp(120px, 16vw, 240px) clamp(16px, 8vw, 120px)',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        <div
-          aria-hidden
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'radial-gradient(ellipse 40% 50% at 80% 50%, rgba(201,168,108,0.04) 0%, transparent 60%)',
-            pointerEvents: 'none',
-          }}
-        />
+        <div className="mesh-bg" aria-hidden>
+          <div className="mesh-orb" style={{ background: 'radial-gradient(circle, rgba(201,168,108,0.05) 0%, transparent 60%)' }} />
+          <div className="mesh-orb" style={{ background: 'radial-gradient(circle, rgba(201,168,108,0.03) 0%, transparent 55%)' }} />
+        </div>
 
         <div
           style={{
@@ -650,9 +691,9 @@ export default function HomePage() {
               aria-hidden
               style={{
                 height: '1px',
-                width: '80px',
+                width: '100px',
                 background: 'linear-gradient(to right, #C9A86C, transparent)',
-                marginBottom: '2rem',
+                marginBottom: '2.5rem',
                 transformOrigin: 'left',
               }}
             />
@@ -660,9 +701,9 @@ export default function HomePage() {
               className="philosophy-heading"
               style={{
                 fontFamily: 'var(--font-cormorant), Georgia, serif',
-                fontSize: 'clamp(2.2rem, 4.5vw, 3.8rem)',
+                fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
                 fontWeight: 300,
-                lineHeight: 1.08,
+                lineHeight: 1.05,
                 color: '#F5F0E8',
                 opacity: 0,
               }}
@@ -677,10 +718,10 @@ export default function HomePage() {
               className="philosophy-text"
               style={{
                 fontSize: 'clamp(0.95rem, 1.4vw, 1.05rem)',
-                lineHeight: 2,
+                lineHeight: 2.1,
                 color: '#F5F0E8',
                 opacity: 0,
-                marginBottom: '2rem',
+                marginBottom: '3rem',
               }}
             >
               Quatréa was founded on a single conviction: that the turning of the year holds
@@ -689,43 +730,27 @@ export default function HomePage() {
               Each season distilled not as a memory, but as a feeling — bottled, lasting,
               wearable as a second skin.
             </p>
-            <blockquote
-              className="philosophy-text"
-              style={{
-                fontFamily: 'var(--font-cormorant), Georgia, serif',
-                fontSize: 'clamp(1.1rem, 1.6vw, 1.3rem)',
-                fontStyle: 'italic',
-                lineHeight: 1.7,
-                color: '#C9A86C',
-                paddingLeft: '1.5rem',
-                borderLeft: '2px solid rgba(201,168,108,0.3)',
-                marginBottom: '3rem',
-                opacity: 0,
-              }}
-            >
-              &ldquo;We do not recreate seasons — we translate their emotional architecture into scent.&rdquo;
-            </blockquote>
             <Link
               href="/about"
-              className="philosophy-cta"
+              className="philosophy-cta magnetic-btn"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.75rem',
+                gap: '1rem',
                 fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                fontSize: '0.65rem',
-                letterSpacing: '0.2em',
+                fontSize: '0.6rem',
+                letterSpacing: '0.25em',
                 textTransform: 'uppercase',
                 color: '#C9A86C',
                 textDecoration: 'none',
-                borderBottom: '1px solid rgba(201,168,108,0.3)',
-                paddingBottom: '4px',
+                borderBottom: '1px solid rgba(201,168,108,0.25)',
+                paddingBottom: '6px',
                 opacity: 0,
                 transition: 'color 0.3s ease, border-color 0.3s ease',
               }}
             >
               Our Philosophy
-              <span style={{ fontSize: '1rem', lineHeight: 1 }}>→</span>
+              <span style={{ fontSize: '1.1rem', lineHeight: 1, transition: 'transform 0.3s' }}>→</span>
             </Link>
           </div>
         </div>
@@ -734,27 +759,26 @@ export default function HomePage() {
       {/* ═══ Footer ═══ */}
       <footer
         style={{
-          padding: 'clamp(60px, 8vw, 100px) clamp(16px, 8vw, 120px) clamp(30px, 4vw, 50px)',
-          borderTop: '1px solid rgba(245,240,232,0.06)',
+          padding: 'clamp(80px, 10vw, 120px) clamp(16px, 8vw, 120px) clamp(30px, 4vw, 50px)',
+          borderTop: '1px solid rgba(245,240,232,0.04)',
         }}
       >
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
+            gridTemplateColumns: '1.5fr 1fr 1fr',
             gap: '3rem',
             alignItems: 'start',
-            marginBottom: '4rem',
+            marginBottom: '5rem',
           }}
         >
           <div>
             <span
+              className="shimmer-text"
               style={{
                 fontFamily: 'var(--font-cormorant), Georgia, serif',
-                fontSize: '1.6rem',
-                letterSpacing: '0.18em',
-                color: '#F5F0E8',
-                opacity: 0.5,
+                fontSize: '1.8rem',
+                letterSpacing: '0.2em',
               }}
             >
               QUATRÉA
@@ -763,27 +787,27 @@ export default function HomePage() {
               style={{
                 fontFamily: 'var(--font-inter), system-ui, sans-serif',
                 fontSize: '0.7rem',
-                lineHeight: 1.7,
+                lineHeight: 1.8,
                 color: '#F5F0E8',
-                opacity: 0.25,
-                marginTop: '1rem',
-                maxWidth: '240px',
+                opacity: 0.2,
+                marginTop: '1.5rem',
+                maxWidth: '260px',
               }}
             >
-              Four seasons. Four essences. A luxury fragrance collection inspired by the eternal cycle.
+              Four seasons. Four essences. A luxury fragrance collection inspired by the eternal cycle of nature.
             </p>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <span
               style={{
                 fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                fontSize: '0.55rem',
-                letterSpacing: '0.3em',
+                fontSize: '0.5rem',
+                letterSpacing: '0.35em',
                 textTransform: 'uppercase',
                 color: '#C9A86C',
-                opacity: 0.5,
-                marginBottom: '0.5rem',
+                opacity: 0.45,
+                marginBottom: '0.75rem',
               }}
             >
               Collection
@@ -794,10 +818,10 @@ export default function HomePage() {
                 href={`/${key}`}
                 style={{
                   fontFamily: 'var(--font-cormorant), Georgia, serif',
-                  fontSize: '0.95rem',
-                  letterSpacing: '0.08em',
+                  fontSize: '1rem',
+                  letterSpacing: '0.06em',
                   color: '#F5F0E8',
-                  opacity: 0.35,
+                  opacity: 0.3,
                   textDecoration: 'none',
                   transition: 'opacity 0.3s',
                 }}
@@ -807,16 +831,16 @@ export default function HomePage() {
             ))}
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'flex-end' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
             <span
               style={{
                 fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                fontSize: '0.55rem',
-                letterSpacing: '0.3em',
+                fontSize: '0.5rem',
+                letterSpacing: '0.35em',
                 textTransform: 'uppercase',
                 color: '#C9A86C',
-                opacity: 0.5,
-                marginBottom: '0.5rem',
+                opacity: 0.45,
+                marginBottom: '0.75rem',
               }}
             >
               Explore
@@ -833,7 +857,7 @@ export default function HomePage() {
                   fontSize: '0.7rem',
                   letterSpacing: '0.08em',
                   color: '#F5F0E8',
-                  opacity: 0.3,
+                  opacity: 0.25,
                   textDecoration: 'none',
                   transition: 'opacity 0.3s',
                 }}
@@ -844,20 +868,19 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid rgba(245,240,232,0.04)',
+            paddingTop: '2rem',
+            borderTop: '1px solid rgba(245,240,232,0.03)',
           }}
         >
-          <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', fontSize: '0.6rem', color: '#F5F0E8', opacity: 0.15 }}>
+          <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', fontSize: '0.55rem', color: '#F5F0E8', opacity: 0.12 }}>
             © 2024 Quatréa. All rights reserved.
           </span>
-          <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', fontSize: '0.55rem', letterSpacing: '0.15em', color: '#F5F0E8', opacity: 0.12 }}>
+          <span style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif', fontSize: '0.5rem', letterSpacing: '0.2em', color: '#F5F0E8', opacity: 0.1 }}>
             Paris · Milan · Tokyo
           </span>
         </div>
