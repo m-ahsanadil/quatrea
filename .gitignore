@@ -28,3 +28,6 @@ yarn-error.log*
 # IDE
 .vscode/
 .idea/
+
+# Project context (local only — not for repo)
+CLAUDE.md
