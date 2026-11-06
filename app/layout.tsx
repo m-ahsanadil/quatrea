@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Cormorant_Garamond, Inter } from 'next/font/google'
 import { Navigation } from '@/components/Navigation'
 import { SmoothScrollProvider } from '@/components/SmoothScrollProvider'
+import { GrainOverlay } from '@/components/GrainOverlay'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
       <body>
         <SmoothScrollProvider>
+          <GrainOverlay />
           <Navigation />
           <main>{children}</main>
         </SmoothScrollProvider>

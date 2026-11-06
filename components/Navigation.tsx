@@ -26,7 +26,6 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  /* Close menu on route change */
   useEffect(() => {
     setMenuOpen(false)
   }, [pathname])
@@ -48,15 +47,15 @@ export function Navigation() {
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 clamp(16px, 5vw, 60px)',
-        transition: 'background 0.4s ease, backdrop-filter 0.4s ease',
+        transition: 'background 0.5s ease, backdrop-filter 0.5s ease, border-color 0.5s ease',
         background: scrolled
           ? isSpring
-            ? 'rgba(245, 237, 232, 0.92)'
-            : 'rgba(5, 5, 5, 0.88)'
+            ? 'rgba(245, 237, 232, 0.85)'
+            : 'rgba(5, 5, 5, 0.8)'
           : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        backdropFilter: scrolled ? 'blur(20px) saturate(1.2)' : 'none',
         borderBottom: scrolled
-          ? `1px solid ${isSpring ? 'rgba(44, 36, 32, 0.08)' : 'rgba(245, 240, 232, 0.08)'}`
+          ? `1px solid ${isSpring ? 'rgba(44, 36, 32, 0.06)' : 'rgba(245, 240, 232, 0.06)'}`
           : '1px solid transparent',
       }}
     >
@@ -66,22 +65,40 @@ export function Navigation() {
         aria-label="Quatréa home"
         style={{
           fontFamily: 'var(--font-cormorant), Georgia, serif',
-          fontSize: '1.5rem',
+          fontSize: '1.4rem',
           fontWeight: 400,
-          letterSpacing: '0.15em',
+          letterSpacing: '0.2em',
           color: isSpring ? '#2C2420' : '#F5F0E8',
           textDecoration: 'none',
+          transition: 'opacity 0.3s',
         }}
       >
         QUATRÉA
       </Link>
+
+      {/* Decorative center dot */}
+      <div
+        aria-hidden
+        className="hidden md:block"
+        style={{
+          position: 'absolute',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '3px',
+          height: '3px',
+          borderRadius: '50%',
+          background: '#C9A86C',
+          opacity: scrolled ? 0.4 : 0,
+          transition: 'opacity 0.5s ease',
+        }}
+      />
 
       {/* Desktop links */}
       <ul
         role="list"
         style={{
           display: 'flex',
-          gap: '2rem',
+          gap: '2.5rem',
           listStyle: 'none',
           alignItems: 'center',
         }}
@@ -96,20 +113,17 @@ export function Navigation() {
                 aria-current={active ? 'page' : undefined}
                 style={{
                   fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.12em',
+                  fontSize: '0.7rem',
+                  letterSpacing: '0.14em',
                   textTransform: 'uppercase',
                   color: isSpring
-                    ? active
-                      ? '#C0787A'
-                      : '#2C2420'
-                    : active
-                      ? '#C9A86C'
-                      : 'rgba(245, 240, 232, 0.65)',
+                    ? active ? '#C0787A' : '#2C2420'
+                    : active ? '#C9A86C' : 'rgba(245, 240, 232, 0.55)',
                   textDecoration: 'none',
-                  transition: 'color 0.2s ease',
+                  transition: 'color 0.3s ease',
                   borderBottom: active ? '1px solid currentColor' : '1px solid transparent',
-                  paddingBottom: '2px',
+                  paddingBottom: '3px',
+                  position: 'relative',
                 }}
               >
                 {label}
@@ -140,7 +154,7 @@ export function Navigation() {
             key={i}
             style={{
               display: 'block',
-              width: '24px',
+              width: '22px',
               height: '1px',
               background: isSpring ? '#2C2420' : '#F5F0E8',
               transition: 'transform 0.3s ease, opacity 0.3s ease',
@@ -167,31 +181,49 @@ export function Navigation() {
             left: 0,
             right: 0,
             bottom: 0,
-            background: isSpring ? '#F5EDE8' : '#050505',
+            background: isSpring ? 'rgba(245,237,232,0.95)' : 'rgba(5,5,5,0.95)',
+            backdropFilter: 'blur(30px)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '2rem',
+            gap: '2.5rem',
             zIndex: 99,
           }}
         >
-          {NAV_LINKS.map(({ href, label }) => (
+          {NAV_LINKS.map(({ href, label }, idx) => (
             <Link
               key={href}
               href={href}
               style={{
                 fontFamily: 'var(--font-cormorant), Georgia, serif',
-                fontSize: '2.5rem',
-                fontWeight: 400,
+                fontSize: '2.8rem',
+                fontWeight: 300,
                 letterSpacing: '0.08em',
                 color: isSpring ? '#2C2420' : '#F5F0E8',
                 textDecoration: 'none',
+                opacity: 0.8,
+                animation: `fadeUp 0.5s ${idx * 0.08}s ease both`,
               }}
             >
               {label}
             </Link>
           ))}
+
+          {/* Decorative element */}
+          <div
+            aria-hidden
+            style={{
+              marginTop: '2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+            }}
+          >
+            <div style={{ width: '30px', height: '1px', background: '#C9A86C', opacity: 0.3 }} />
+            <div style={{ width: '4px', height: '4px', borderRadius: '50%', background: '#C9A86C', opacity: 0.4 }} />
+            <div style={{ width: '30px', height: '1px', background: '#C9A86C', opacity: 0.3 }} />
+          </div>
         </div>
       )}
     </nav>
