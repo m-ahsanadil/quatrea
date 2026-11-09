@@ -34,3 +34,4 @@ yarn-error.log*
 
 # Project context (local only — not for repo)
 ahsanadil.md
+.vercel
