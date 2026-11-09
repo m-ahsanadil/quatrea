@@ -1,10 +1,23 @@
 # Quatréa
 
-A scrollytelling website concept for **Quatréa**, a fictional luxury perfume house with four fragrances, one per season: Floraison (Spring), Solstice (Summer), Crépuscule (Autumn) and Givre (Winter).
+A scrollytelling website concept for **Quatréa**, a fictional luxury perfume house with four fragrances, one for each season: **Floraison** (Spring), **Solstice** (Summer), **Crépuscule** (Autumn) and **Givre** (Winter).
 
-**Live demo:** https://quatrea-lyart.vercel.app
+**Live demo: [quatrea-lyart.vercel.app](https://quatrea-lyart.vercel.app)**
 
-Six pages (Home, four season pages, About) with smooth scrolling, a pinned scroll-driven bottle reveal on every season page, and circular page transitions between routes.
+![Quatréa home page](docs/screenshots/home.png)
+
+| Summer: Solstice | Winter: Givre (pinned bottle reveal) |
+| --- | --- |
+| ![Summer page](docs/screenshots/summer.png) | ![Winter pinned bottle reveal](docs/screenshots/winter-bottle.png) |
+
+## Highlights
+
+- **Six pages:** Home, one page per season (each with its own palette and fragrance story), and About.
+- **Scroll-driven storytelling:** on every season page the bottle is pinned and revealed as you scroll, with notes, story and cross-season cards following.
+- **Circular page transitions:** a new page grows from the point you clicked while the old one recedes and the navigation bar stays in place.
+- **Smooth, quiet motion:** Lenis smooth scrolling, character-staggered hero, parallax, ambient grain, particles and a cursor glow, all tuned to feel slow and premium.
+- **Works for everyone:** content is visible without JavaScript or with reduced motion, there is a skip link, a keyboard-friendly mobile menu and 44px touch targets.
+- **Responsive:** checked at 390, 768 and 1440 px with no horizontal overflow.
 
 ## Stack
 
@@ -52,6 +65,7 @@ content/                Copy and data: seasons, home, about, site
 hooks/                  useMotion, useOffscreenPause
 lib/                    Motion tokens, scroll singleton, transition bridge
 styles/                 CSS by responsibility; globals.css imports them in order
+docs/screenshots/       Images used in this README
 ```
 
 Conventions:
@@ -82,4 +96,8 @@ Internal link clicks are wrapped in a view transition: the new page is revealed 
 
 ## Deployment
 
-Deployed on Vercel; no environment variables are required. Security headers are set in `next.config.ts`.
+Deployed on Vercel; no environment variables are required. Security headers (content type, framing, referrer, permissions, HSTS) are set in `next.config.ts`.
+
+## Browser support
+
+Everything works in current evergreen browsers. Circular page transitions need the View Transitions API (Chromium-based browsers and recent Safari); other browsers navigate normally.
