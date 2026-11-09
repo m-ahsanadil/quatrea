@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SeasonPage } from '@/components/SeasonPage'
+import { SeasonView } from '@/components/season/SeasonView'
 
 export const metadata: Metadata = {
   title: 'Autumn — Crépuscule',
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function AutumnPage() {
-  return <SeasonPage seasonKey="autumn" />
+  return <SeasonView seasonKey="autumn" />
 }

@@ -3,15 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { NAV_LINKS } from '@/content/site'
 import { getScroller } from '@/lib/scroll'
-
-const NAV_LINKS = [
-  { href: '/spring', label: 'Spring' },
-  { href: '/summer', label: 'Summer' },
-  { href: '/autumn', label: 'Autumn' },
-  { href: '/winter', label: 'Winter' },
-  { href: '/about', label: 'About' },
-]
 
 const DESKTOP_QUERY = '(min-width: 768px)'
 

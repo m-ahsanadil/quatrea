@@ -1,0 +1,186 @@
+/* Primary navigation: fixed bar, desktop links, mobile burger and drawer. */
+.site-nav,
+.nav-drawer {
+  --nav-fg: #F5F0E8;
+  --nav-fg-dim: rgba(245, 240, 232, 0.72);
+  --nav-accent: #C9A86C;
+  --nav-bg: rgba(5, 5, 5, 0.82);
+  --nav-line: rgba(245, 240, 232, 0.08);
+}
+
+.site-nav[data-theme='light'],
+.nav-drawer[data-theme='light'] {
+  --nav-fg: #2C2420;
+  --nav-fg-dim: rgba(44, 36, 32, 0.78);
+  --nav-accent: #9A5254;
+  --nav-bg: rgba(245, 237, 232, 0.88);
+  --nav-line: rgba(44, 36, 32, 0.1);
+}
+
+.site-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(16px, 5vw, 60px);
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background-color var(--dur-view) var(--ease-out),
+              border-color var(--dur-view) var(--ease-out);
+}
+
+.site-nav[data-scrolled='true'],
+.site-nav[data-menu-open='true'] {
+  background: var(--nav-bg);
+  border-bottom-color: var(--nav-line);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  backdrop-filter: blur(20px) saturate(1.2);
+}
+
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.2em;
+  color: var(--nav-fg);
+  text-decoration: none;
+}
+
+/* Desktop and mobile controls are mutually exclusive at 768px. */
+.nav-links {
+  display: none;
+  list-style: none;
+  align-items: center;
+  gap: 2.25rem;
+}
+
+.nav-burger { display: flex; }
+.nav-drawer { display: flex; }
+
+@media (min-width: 768px) {
+  .nav-links { display: flex; }
+  .nav-burger { display: none; }
+  .nav-drawer { display: none; }
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--nav-fg-dim);
+  text-decoration: none;
+  transition: color var(--dur-micro) var(--ease-out);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 9px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-element) var(--ease-out);
+}
+
+.nav-link[aria-current='page'] { color: var(--nav-accent); }
+.nav-link[aria-current='page']::after { transform: scaleX(1); }
+
+@media (hover: hover) {
+  .nav-link:hover { color: var(--nav-fg); }
+  .nav-link:hover::after { transform: scaleX(1); }
+}
+
+.nav-burger {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--nav-fg);
+}
+
+.nav-burger-line {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: currentColor;
+  transition: transform var(--dur-element) var(--ease-out),
+              opacity var(--dur-micro) linear;
+}
+
+.site-nav[data-menu-open='true'] .nav-burger-line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.site-nav[data-menu-open='true'] .nav-burger-line:nth-child(2) { opacity: 0; }
+.site-nav[data-menu-open='true'] .nav-burger-line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* The drawer is a sibling of <nav>: backdrop-filter on the bar would
+   otherwise become the containing block of this fixed element. */
+.nav-drawer {
+  position: fixed;
+  top: var(--nav-height);
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 99;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity var(--dur-element) var(--ease-out),
+              visibility 0s linear var(--dur-element);
+}
+
+.nav-drawer[data-open='true'] {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.nav-drawer-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 0 1rem;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 2.6rem;
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  color: var(--nav-fg);
+  text-decoration: none;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--dur-element) var(--ease-out),
+              transform var(--dur-element) var(--ease-out);
+}
+
+.nav-drawer[data-open='true'] .nav-drawer-link {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i, 0) * 50ms + 60ms);
+}
+
+.nav-drawer-link[aria-current='page'] { color: var(--nav-accent); }

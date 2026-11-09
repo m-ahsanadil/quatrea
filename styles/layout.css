@@ -1,0 +1,65 @@
+/* Layout primitives. Responsive behaviour lives here, never in inline styles
+   (an inline display/grid would defeat these media queries). */
+.screen {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, min(58ch, 100%));
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1rem, 3vw, 3rem); }
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.pin-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-inline: var(--gutter);
+}
+
+/* Wordmark: line-height < 1 with overflow clipping would cut the accent on
+   É and the tail of Q, so the box gets matching padding. */
+.wordmark {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 0 0.03em;
+  padding: 0.16em 0 0.08em;
+  overflow: hidden;
+  perspective: 800px;
+}
+
+@media (max-width: 959px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 767px) {
+  .grid-3,
+  .footer-grid,
+  .pin-grid { grid-template-columns: 1fr; }
+
+  .pin-grid { padding-block: clamp(80px, 22vw, 140px); }
+  .pin-visual { order: -1; }
+  .footer-grid { gap: 2.5rem; }
+}
+
+@media (max-width: 639px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); row-gap: 2rem; }
+}

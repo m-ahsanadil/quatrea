@@ -1,0 +1,20 @@
+/* Design tokens. Colour and spacing live here; motion tokens mirror lib/motion.ts. */
+:root {
+  --bg: #050505;
+  --fg: #F5F0E8;
+  --accent: #C9A86C;
+  --accent-text: #C9A86C;
+  --muted: rgba(245, 240, 232, 0.62);
+  --border: rgba(245, 240, 232, 0.12);
+  --nav-height: 72px;
+  --gutter: clamp(16px, 8vw, 120px);
+  --section-y: clamp(100px, 14vw, 200px);
+
+  /* Motion personality: luxury — slow, soft, minimal. */
+  --dur-micro: 160ms;
+  --dur-element: 280ms;
+  --dur-view: 420ms;
+  --dur-story: 900ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}

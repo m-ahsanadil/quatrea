@@ -1,0 +1,49 @@
+/* User preference queries. Kept last so they can override everything above. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .marquee-track,
+  .mesh-orb,
+  .breathing-orb,
+  .scroll-cue-line { animation: none; }
+
+  .floating-particle,
+  .cursor-glow { display: none; }
+}
+
+@media (prefers-contrast: more) {
+  .grain-layer,
+  .cursor-glow { display: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-nav[data-scrolled='true'],
+  .site-nav[data-menu-open='true'],
+  .nav-drawer {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .site-nav[data-scrolled='true'],
+  .site-nav[data-menu-open='true'],
+  .nav-drawer { background: var(--bg); }
+  .site-nav[data-theme='light'][data-scrolled='true'],
+  .nav-drawer[data-theme='light'] { background: #F5EDE8; }
+}
+
+/* Decorative layers can vanish or flatten here; nothing may rely on them. */
+@media (forced-colors: active) {
+  .decor { display: none !important; }
+  .gold-text {
+    -webkit-text-fill-color: currentColor;
+    background: none;
+    color: CanvasText;
+  }
+  .btn-gold { border: 1px solid ButtonText; }
+}

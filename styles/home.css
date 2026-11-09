@@ -1,0 +1,269 @@
+/* Home page sections (components/home). */
+
+/* ─── Hero ─── */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(16px, 6vw, 80px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.hero__ornament {
+  width: 100px;
+  height: 1px;
+  margin: 0 auto 2.5rem;
+  transform-origin: center;
+  background: linear-gradient(to right, transparent, #C9A86C, transparent);
+}
+
+.hero__eyebrow { letter-spacing: 0.45em; margin-bottom: 3rem; }
+
+.hero__wordmark {
+  font-size: clamp(3.5rem, 17vw, 16rem);
+  font-weight: 300;
+  line-height: 0.9;
+  letter-spacing: -0.05em;
+}
+
+.hero__letter { display: inline-block; }
+.hero__divider { transform-origin: center; }
+
+.hero__tagline {
+  margin-top: 0.5rem;
+  font-size: clamp(0.75rem, 1.1vw, 0.8rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.hero__cta { margin-top: 3.5rem; }
+
+/* ─── Marquee ─── */
+.marquee {
+  padding: 2.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(245, 240, 232, 0.06);
+  border-bottom: 1px solid rgba(245, 240, 232, 0.06);
+}
+
+.marquee__text {
+  padding-right: 0.5em;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  opacity: 0.1;
+}
+
+/* ─── Cinematic quote ─── */
+.quote {
+  position: relative;
+  padding: clamp(100px, 14vw, 200px) var(--gutter);
+  text-align: center;
+  overflow: hidden;
+}
+
+.quote__halo {
+  position: absolute;
+  inset: -30%;
+  background: radial-gradient(ellipse 40% 40% at 50% 50%, rgba(201, 168, 108, 0.05) 0%, transparent 60%);
+}
+
+.quote__inner { position: relative; max-width: 750px; margin: 0 auto; }
+
+.quote__rule {
+  width: 120px;
+  height: 1px;
+  margin: 0 auto 3rem;
+  transform-origin: center;
+  background: linear-gradient(to right, transparent, #C9A86C, transparent);
+}
+
+.quote__rule--end { margin: 3rem auto 0; }
+
+.quote__text {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.quote__attribution { margin-top: 2rem; }
+
+/* ─── Collection ─── */
+.collection { padding: clamp(60px, 8vw, 100px) clamp(16px, 5vw, 60px); }
+
+.collection__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 4rem;
+  padding: 0 0.5rem;
+}
+
+.collection__eyebrow { margin-bottom: 0.75rem; }
+
+.collection__title {
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.collection__note {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  font-style: italic;
+  opacity: 0.65;
+}
+
+.collection__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 4px;
+}
+
+/* ─── Bottle showcase ─── */
+.showcase {
+  position: relative;
+  padding: clamp(80px, 10vw, 140px) clamp(16px, 5vw, 60px);
+  overflow: hidden;
+  border-top: 1px solid rgba(245, 240, 232, 0.06);
+  border-bottom: 1px solid rgba(245, 240, 232, 0.06);
+}
+
+.showcase__halo {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(201, 168, 108, 0.04) 0%, transparent 60%);
+}
+
+.showcase__list {
+  position: relative;
+  max-width: 1000px;
+  margin: 0 auto;
+  list-style: none;
+}
+
+.showcase__item { display: flex; }
+
+.showcase__link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  text-decoration: none;
+}
+
+.showcase__bottle-wrap { position: relative; margin-bottom: 2rem; }
+.showcase__orb { position: absolute; inset: -30%; border-radius: 50%; }
+.showcase__bottle { position: relative; width: clamp(55px, 9vw, 90px); height: auto; }
+
+.showcase__perfume {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  letter-spacing: 0.06em;
+  opacity: 0.88;
+}
+
+.showcase__season { margin-top: 0.5rem; letter-spacing: 0.22em; opacity: 0.85; }
+
+/* ─── Philosophy ─── */
+.philosophy {
+  position: relative;
+  padding: clamp(120px, 16vw, 240px) var(--gutter);
+  overflow: hidden;
+}
+
+.philosophy__grid { position: relative; }
+
+.philosophy__rule {
+  width: 100px;
+  height: 1px;
+  margin-bottom: 2.5rem;
+  transform-origin: left;
+  background: linear-gradient(to right, #C9A86C, transparent);
+}
+
+.philosophy__heading {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+}
+
+.philosophy__heading em { color: #C9A86C; }
+
+.philosophy__text {
+  margin-bottom: 3rem;
+  font-size: clamp(1rem, 1.4vw, 1.08rem);
+  line-height: 2;
+  opacity: 0.82;
+}
+
+/* ─── Footer ─── */
+.home-footer {
+  padding: clamp(80px, 10vw, 120px) var(--gutter) clamp(30px, 4vw, 50px);
+  border-top: 1px solid rgba(245, 240, 232, 0.06);
+}
+
+.home-footer__grid { margin-bottom: 5rem; }
+
+.home-footer__brand {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.2em;
+}
+
+.home-footer__blurb {
+  max-width: 280px;
+  margin-top: 1.5rem;
+  font-size: 0.85rem;
+  line-height: 1.8;
+  opacity: 0.65;
+}
+
+.home-footer__heading { margin-bottom: 1rem; }
+
+.home-footer__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  list-style: none;
+}
+
+.home-footer__perfume {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+}
+
+.home-footer__link { font-size: 0.85rem; letter-spacing: 0.08em; }
+
+.home-footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(245, 240, 232, 0.06);
+  font-size: 0.75rem;
+  opacity: 0.55;
+}
+
+.home-footer__cities { letter-spacing: 0.2em; }

@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import { Cormorant_Garamond, Inter } from 'next/font/google'
-import { Navigation } from '@/components/Navigation'
-import { SmoothScrollProvider } from '@/components/SmoothScrollProvider'
-import { GrainOverlay } from '@/components/GrainOverlay'
-import { CursorGlow } from '@/components/CursorGlow'
-import { ScrollProgress } from '@/components/ScrollProgress'
-import { RouteEffects } from '@/components/RouteEffects'
+import { Navigation } from '@/components/layout/Navigation'
+import { SmoothScrollProvider } from '@/components/layout/SmoothScrollProvider'
+import { GrainOverlay } from '@/components/ambient/GrainOverlay'
+import { CursorGlow } from '@/components/ambient/CursorGlow'
+import { ScrollProgress } from '@/components/ambient/ScrollProgress'
+import { RouteEffects } from '@/components/layout/RouteEffects'
+import { PageTransitions } from '@/components/layout/PageTransitions'
 import './globals.css'
 
 const cormorant = Cormorant_Garamond({
@@ -73,6 +74,7 @@ export default function RootLayout({
             {children}
           </main>
           <RouteEffects />
+          <PageTransitions />
         </SmoothScrollProvider>
       </body>
     </html>

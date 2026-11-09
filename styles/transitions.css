@@ -1,0 +1,36 @@
+/* Route transitions: View Transitions API, started by layout/PageTransitions on
+   internal link clicks. The new page is revealed by a circle growing from the
+   click point while the old one recedes (exit faster than entrance). The nav
+   bar has its own transition name so it stays continuous instead of being
+   wiped with the page. Browsers without the API, and reduced motion, simply
+   navigate. */
+.site-nav { view-transition-name: site-nav; }
+
+@keyframes vt-recede {
+  to { opacity: 0.55; transform: scale(0.985); }
+}
+
+@keyframes vt-reveal {
+  from { clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%)); }
+  to   { clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 50%)); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-old(root) {
+    animation: vt-recede 320ms var(--ease-in-out) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-reveal 480ms var(--ease-out) both;
+  }
+
+  ::view-transition-group(site-nav) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--ease-out);
+  }
+}

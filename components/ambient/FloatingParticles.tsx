@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from 'react'
-import { useOffscreenPause } from '@/lib/useOffscreenPause'
+import { useOffscreenPause } from '@/hooks/useOffscreenPause'
 
 interface FloatingParticlesProps {
   color?: string

@@ -1,0 +1,185 @@
+/* About page sections (components/about). */
+
+/* ─── Hero ─── */
+.about-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: var(--nav-height) var(--gutter) clamp(80px, 12vw, 160px);
+  position: relative;
+  overflow: hidden;
+}
+
+.about-hero__glow {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 60%, rgba(201, 168, 108, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 40% at 75% 30%, rgba(201, 168, 108, 0.05) 0%, transparent 50%);
+}
+
+.about-hero__inner { position: relative; z-index: 1; }
+
+.about-hero__line {
+  width: 60px;
+  height: 1px;
+  margin-bottom: 2rem;
+  transform-origin: left;
+  background: linear-gradient(to right, #C9A86C, transparent);
+}
+
+.about-hero__eyebrow { letter-spacing: 0.4em; margin-bottom: 2rem; }
+
+.about-hero__title {
+  max-width: 900px;
+  font-size: clamp(3.2rem, 12vw, 10rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.about-hero__title em { color: #C9A86C; }
+
+/* ─── Stats ─── */
+.stats {
+  padding: clamp(50px, 6vw, 80px) var(--gutter);
+  border-top: 1px solid rgba(245, 240, 232, 0.08);
+  border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+}
+
+.stats__list {
+  max-width: 800px;
+  margin: 0 auto;
+  list-style: none;
+  text-align: center;
+}
+
+.stats__value {
+  margin-bottom: 0.5rem;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1;
+  color: #C9A86C;
+}
+
+.stats__label { color: var(--fg); letter-spacing: 0.2em; opacity: 0.7; }
+
+/* ─── Philosophy ─── */
+.about-philosophy__eyebrow { margin-bottom: 1.5rem; }
+
+.about-philosophy__heading {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 300;
+  line-height: 1.08;
+}
+
+.about-philosophy__text {
+  margin-bottom: 1.5rem;
+  font-size: clamp(1rem, 1.4vw, 1.08rem);
+  line-height: 2;
+  opacity: 0.82;
+}
+
+.about-philosophy__quote {
+  margin-top: 2rem;
+  padding-left: 1.5rem;
+  border-left: 2px solid rgba(201, 168, 108, 0.45);
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+  font-style: italic;
+  line-height: 1.7;
+  color: #C9A86C;
+}
+
+/* ─── Methods ─── */
+.methods { border-top: 1px solid rgba(245, 240, 232, 0.08); }
+.methods__head { margin-bottom: 4rem; }
+.methods__eyebrow { margin-bottom: 1rem; }
+.methods__title { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 300; }
+
+.methods__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 4px;
+}
+
+.method-card {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 2rem;
+  background: rgba(201, 168, 108, 0.04);
+  border: 1px solid rgba(201, 168, 108, 0.12);
+}
+
+.method-card__number {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1;
+  color: #C9A86C;
+  opacity: 0.1;
+}
+
+.method-card__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  opacity: 0.45;
+  background: linear-gradient(to bottom, #C9A86C, transparent);
+}
+
+.method-card__title {
+  margin-bottom: 1.2rem;
+  font-size: clamp(1.3rem, 1.8vw, 1.55rem);
+  font-weight: 400;
+}
+
+.method-card__body { font-size: 0.9rem; line-height: 1.8; opacity: 0.74; }
+
+/* ─── Bottle line-up ─── */
+.lineup {
+  padding: clamp(80px, 10vw, 140px) var(--gutter);
+  text-align: center;
+  border-top: 1px solid rgba(245, 240, 232, 0.08);
+  border-bottom: 1px solid rgba(245, 240, 232, 0.08);
+}
+
+.lineup__line {
+  max-width: 500px;
+  margin: 0 auto 4rem;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 300;
+  font-style: italic;
+  opacity: 0.78;
+}
+
+.lineup__list { max-width: 700px; margin: 0 auto; list-style: none; }
+
+.lineup__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0.9;
+}
+
+.lineup__bottle { width: clamp(45px, 7vw, 65px); height: auto; margin-bottom: 1.2rem; }
+.lineup__name { font-family: var(--font-cormorant), Georgia, serif; font-size: 1rem; }
+
+/* ─── Collection links ─── */
+.about-collection__head { margin-bottom: 4rem; }
+.about-collection__eyebrow { margin-bottom: 1rem; }
+.about-collection__title { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 300; }
+
+.about-collection__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 4px;
+}

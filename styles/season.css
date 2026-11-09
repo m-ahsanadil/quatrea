@@ -1,0 +1,222 @@
+/* Season pages. The page wrapper (SeasonView) sets --season-accent,
+   --accent-text and --focus per season; every tint below derives from them. */
+
+/* ─── Hero ─── */
+.season-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(16px, 6vw, 80px);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.season-hero__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 950px;
+}
+
+.season-hero__line {
+  width: 80px;
+  height: 1px;
+  margin: 0 auto 2.5rem;
+  transform-origin: center;
+  background: linear-gradient(to right, transparent, var(--season-accent), transparent);
+}
+
+.season-hero__number { letter-spacing: 0.45em; margin-bottom: 2rem; }
+
+.season-hero__title {
+  font-size: clamp(3rem, 13.5vw, 15rem);
+  font-weight: 300;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.season-hero__tagline {
+  max-width: 420px;
+  margin: 0 auto;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  letter-spacing: 0.1em;
+  line-height: 1.7;
+}
+
+/* ─── Bottle reveal (pinned and scrubbed on desktop) ─── */
+.pin-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.pin-copy {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+}
+
+.pin-name {
+  font-size: clamp(2.8rem, 7vw, 6rem);
+  font-weight: 300;
+  line-height: 0.95;
+  margin-bottom: 1.2rem;
+}
+
+.pin-tagline { letter-spacing: 0.15em; margin-bottom: 2.5rem; }
+
+.pin-desc {
+  max-width: 420px;
+  margin-bottom: 3rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+  line-height: 1.9;
+  color: color-mix(in srgb, currentColor 82%, transparent);
+}
+
+.pin-note {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  margin-bottom: 0.85rem;
+}
+
+.pin-note__layer { min-width: 64px; letter-spacing: 0.24em; }
+.pin-note__values { font-size: 0.9rem; letter-spacing: 0.03em; opacity: 0.78; }
+
+.pin-visual {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pin-ring {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.pin-ring--inner {
+  width: clamp(220px, 32vw, 380px);
+  height: clamp(220px, 32vw, 380px);
+  border: 1px solid color-mix(in srgb, var(--season-accent) 35%, transparent);
+  background: radial-gradient(circle, color-mix(in srgb, var(--season-accent) 15%, transparent) 0%, transparent 70%);
+  box-shadow: inset 0 0 80px color-mix(in srgb, var(--season-accent) 7%, transparent);
+}
+
+.pin-ring--outer {
+  width: clamp(300px, 45vw, 520px);
+  height: clamp(300px, 45vw, 520px);
+  border: 1px solid color-mix(in srgb, var(--season-accent) 15%, transparent);
+}
+
+.pin-bottle {
+  position: relative;
+  width: clamp(150px, 22vw, 280px);
+  height: auto;
+  filter: drop-shadow(0 24px 48px color-mix(in srgb, var(--season-accent) 25%, transparent));
+}
+
+/* ─── Fragrance notes ─── */
+.notes { border-top: 1px solid color-mix(in srgb, var(--season-accent) 10%, transparent); }
+
+.notes__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 4rem;
+}
+
+.notes__caption {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  font-style: italic;
+  opacity: 0.65;
+}
+
+.notes__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 4px;
+}
+
+.note-card {
+  padding: 3.5rem 2.5rem;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--season-accent) 6%, transparent) 0%,
+    color-mix(in srgb, var(--season-accent) 2%, transparent) 100%
+  );
+}
+
+.note-card__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  opacity: 0.55;
+  background: linear-gradient(to bottom, var(--season-accent), transparent);
+}
+
+.note-card__index {
+  position: absolute;
+  top: 0.5rem;
+  right: 1.5rem;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 5rem;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--season-accent);
+  opacity: 0.08;
+}
+
+.note-card__title { margin-bottom: 2rem; letter-spacing: 0.28em; }
+
+.note-card__item {
+  margin-bottom: 0.6rem;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  line-height: 1.3;
+}
+
+/* ─── Story ─── */
+.story { position: relative; }
+
+.story__line {
+  width: 1px;
+  height: 120px;
+  margin-bottom: 2rem;
+  transform-origin: top;
+  background: linear-gradient(to bottom, var(--season-accent), transparent);
+}
+
+.story__heading {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  line-height: 1.12;
+}
+
+.story__body {
+  margin-bottom: 3rem;
+  font-size: clamp(1rem, 1.4vw, 1.08rem);
+  line-height: 2;
+  opacity: 0.82;
+}
+
+.story__craft {
+  padding-left: 1.5rem;
+  border-left: 2px solid color-mix(in srgb, var(--season-accent) 40%, transparent);
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-style: italic;
+  line-height: 1.8;
+  color: var(--accent-text);
+}
+
+/* ─── Other seasons ─── */
+.journey { border-top: 1px solid color-mix(in srgb, var(--season-accent) 10%, transparent); }
+.journey__title { margin-bottom: 4rem; }

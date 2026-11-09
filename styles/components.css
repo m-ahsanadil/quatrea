@@ -1,0 +1,294 @@
+/* Shared components: type labels, cards, buttons, links, footers, marquee. */
+
+.eyebrow {
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  color: var(--accent-text);
+}
+
+/* Static gold gradient for the footer wordmark (no looping animation). */
+.gold-text {
+  background: linear-gradient(90deg, #C9A86C 0%, #E8D3A0 50%, #C9A86C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Scroll cue: a label over a thin line, pinned to the bottom of a hero. */
+.scroll-cue {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  translate: -50% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.scroll-cue__label { font-size: 0.68rem; letter-spacing: 0.35em; color: inherit; opacity: 0.6; }
+
+.scroll-cue__line {
+  width: 1px;
+  height: 60px;
+  transform-origin: top;
+  background: linear-gradient(to bottom, var(--cue-color, #C9A86C), transparent);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem 0;
+}
+
+.divider-rule { width: 60px; height: 1px; opacity: 0.4; }
+
+/* ─── Cards: hover/focus lift uses the individual `translate` property so it
+   never competes with GSAP, which owns `transform` on the same elements. ─── */
+.luxury-card {
+  transition: translate var(--dur-element) var(--ease-out),
+              box-shadow var(--dur-element) var(--ease-out);
+}
+
+.card-glow {
+  opacity: 0;
+  transition: opacity var(--dur-view) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .luxury-card:hover {
+    translate: 0 -6px;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
+  }
+  .luxury-card:hover .card-glow { opacity: 1; }
+}
+
+.luxury-card:focus-visible {
+  translate: 0 -6px;
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.4);
+}
+.luxury-card:focus-visible .card-glow { opacity: 1; }
+
+.gradient-border-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.02);
+  overflow: hidden;
+}
+
+.gradient-border-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(201, 168, 108, 0) 0%, rgba(201, 168, 108, 0.28) 50%, rgba(201, 168, 108, 0) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--dur-view) var(--ease-out);
+  pointer-events: none;
+}
+
+.gradient-border-card:focus-visible::before { opacity: 1; }
+@media (hover: hover) {
+  .gradient-border-card:hover::before { opacity: 1; }
+}
+
+/* Season card (ui/SeasonCard). White text sits on a darkened lower half so
+   it stays legible on every season gradient, including light Spring. */
+.season-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+}
+
+.season-card__glow,
+.season-card__shade { position: absolute; inset: 0; }
+
+.season-card__shade {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.22) 45%, rgba(0, 0, 0, 0.7) 100%);
+}
+
+.season-card__watermark {
+  position: absolute;
+  top: 0.75rem;
+  right: 1.1rem;
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-weight: 300;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.1;
+}
+
+.season-card__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.season-card__eyebrow { margin-bottom: 0.75rem; letter-spacing: 0.3em; }
+.season-card__eyebrow,
+.season-card__cta { color: #fff; opacity: 0.8; }
+.season-card__cta { letter-spacing: 0.22em; }
+
+.season-card__name {
+  font-weight: 300;
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.season-card__perfume {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-style: italic;
+  color: #fff;
+  opacity: 0.88;
+  margin-bottom: 1.4rem;
+}
+
+.season-card__rule {
+  width: 32px;
+  height: 1px;
+  background: #fff;
+  opacity: 0.4;
+  margin-bottom: 1.1rem;
+}
+
+.season-card--tall { aspect-ratio: 3 / 4.5; }
+.season-card--tall .season-card__body { position: absolute; inset: 0; padding: 2.5rem 2rem; justify-content: flex-end; }
+.season-card--tall .season-card__watermark { font-size: clamp(5rem, 12vw, 9rem); }
+.season-card--tall .season-card__name { font-size: clamp(2.5rem, 5vw, 3.5rem); line-height: 0.95; }
+.season-card--tall .season-card__perfume { font-size: clamp(1.05rem, 1.8vw, 1.25rem); }
+
+.season-card--compact { padding: clamp(2.5rem, 4vw, 3.5rem) 2rem; }
+.season-card--compact .season-card__watermark { font-size: clamp(3.5rem, 7vw, 6rem); }
+.season-card--compact .season-card__name { font-size: clamp(1.9rem, 3vw, 2.4rem); }
+.season-card--compact .season-card__perfume { font-size: clamp(1rem, 1.4vw, 1.1rem); }
+
+/* ─── Buttons and links ─── */
+.btn-gold {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 clamp(1.8rem, 6vw, 3.5rem);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #050505;
+  background: linear-gradient(135deg, #C9A86C 0%, #E0C88C 50%, #C9A86C 100%);
+  text-decoration: none;
+  overflow: hidden;
+  transition: translate var(--dur-element) var(--ease-out),
+              box-shadow var(--dur-element) var(--ease-out);
+}
+
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, transparent 55%);
+  opacity: 0;
+  transition: opacity var(--dur-element) var(--ease-out);
+}
+
+.btn-gold:focus-visible { translate: 0 -2px; }
+.btn-gold:focus-visible::after { opacity: 1; }
+.btn-gold:active { translate: 0 0; }
+
+@media (hover: hover) {
+  .btn-gold:hover { translate: 0 -2px; box-shadow: 0 14px 40px rgba(201, 168, 108, 0.25); }
+  .btn-gold:hover::after { opacity: 1; }
+}
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 44px;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent-text);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(201, 168, 108, 0.35);
+  transition: border-color var(--dur-element) var(--ease-out);
+}
+
+.text-link-arrow {
+  display: inline-block;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: translate var(--dur-element) var(--ease-out);
+}
+
+.text-link:focus-visible .text-link-arrow { translate: 6px 0; }
+@media (hover: hover) {
+  .text-link:hover { border-color: var(--accent-text); }
+  .text-link:hover .text-link-arrow { translate: 6px 0; }
+}
+
+.link-muted {
+  display: inline-block;
+  padding: 0.4rem 0;
+  color: var(--fg);
+  opacity: 0.68;
+  text-decoration: none;
+  transition: opacity var(--dur-micro) var(--ease-out);
+}
+
+.link-muted:focus-visible { opacity: 1; }
+@media (hover: hover) {
+  .link-muted:hover { opacity: 1; }
+}
+
+/* ─── Marquee (decorative: aria-hidden, pauses on hover and when offscreen) ─── */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: marqueeScroll 40s linear infinite;
+}
+
+@media (hover: hover) {
+  .marquee-track:hover { animation-play-state: paused; }
+}
+
+@keyframes marqueeScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── Compact footer shared by the season and About pages ─── */
+.simple-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: clamp(50px, 7vw, 80px) var(--gutter);
+  border-top: 1px solid;
+}
+
+.simple-footer__brand {
+  font-family: var(--font-cormorant), Georgia, serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.2em;
+  opacity: 0.7;
+}
+
+.simple-footer__legal { font-size: 0.75rem; opacity: 0.6; }
