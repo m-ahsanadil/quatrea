@@ -19,6 +19,7 @@ export function PerfumeBottle({
     <svg
       viewBox="0 0 100 265"
       xmlns="http://www.w3.org/2000/svg"
+      role="img"
       aria-label={`${perfumeName} perfume bottle`}
       className={className}
       style={{ color: accentColor, ...style }}

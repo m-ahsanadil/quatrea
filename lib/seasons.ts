@@ -10,6 +10,8 @@ export interface SeasonColors {
   bg: string
   fg: string
   accent: string
+  /** Accent for small text; meets 4.5:1 on `bg` (the plain accent does not on Spring). */
+  accentText: string
   accentMuted: string
   cardGradient: string
 }
@@ -49,6 +51,7 @@ export const SEASONS: Record<SeasonKey, Season> = {
       bg: '#F5EDE8',
       fg: '#2C2420',
       accent: '#C0787A',
+      accentText: '#9A5254',
       accentMuted: 'rgba(192, 120, 122, 0.3)',
       cardGradient:
         'linear-gradient(145deg, #FBF4F0 0%, #E8C0C0 40%, #A8C0A0 100%)',
@@ -75,6 +78,7 @@ export const SEASONS: Record<SeasonKey, Season> = {
       bg: '#100800',
       fg: '#FFF0D8',
       accent: '#E8A020',
+      accentText: '#E8A020',
       accentMuted: 'rgba(232, 160, 32, 0.25)',
       cardGradient:
         'linear-gradient(145deg, #1A0800 0%, #C87820 50%, #E04020 100%)',
@@ -101,6 +105,7 @@ export const SEASONS: Record<SeasonKey, Season> = {
       bg: '#0D0804',
       fg: '#F0E0C8',
       accent: '#C4793E',
+      accentText: '#C4793E',
       accentMuted: 'rgba(196, 121, 62, 0.25)',
       cardGradient:
         'linear-gradient(145deg, #0D0804 0%, #A05828 50%, #600800 100%)',
@@ -127,6 +132,7 @@ export const SEASONS: Record<SeasonKey, Season> = {
       bg: '#040812',
       fg: '#E8F4FF',
       accent: '#7BA7C8',
+      accentText: '#7BA7C8',
       accentMuted: 'rgba(123, 167, 200, 0.25)',
       cardGradient:
         'linear-gradient(145deg, #040812 0%, #3A6080 50%, #1A3050 100%)',

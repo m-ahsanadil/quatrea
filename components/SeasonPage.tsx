@@ -1,15 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { PerfumeBottle } from './PerfumeBottle'
 import { FloatingParticles } from './FloatingParticles'
+import { MeshBackground } from './MeshBackground'
 import { Divider } from './Divider'
 import { SEASONS, SEASON_KEYS, type SeasonKey } from '@/lib/seasons'
+import { DIST, DUR, EASE, SCALE_IN, STAGGER, useMotion } from '@/lib/motion'
 
 interface SeasonPageProps {
   seasonKey: SeasonKey
 }
+
+const LAYERS = ['top', 'heart', 'base'] as const
 
 export function SeasonPage({ seasonKey }: SeasonPageProps) {
   const season = SEASONS[seasonKey]
@@ -18,123 +22,116 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
   const pinRef = useRef<HTMLElement>(null)
 
   const otherSeasons = SEASON_KEYS.filter((k) => k !== seasonKey)
+  const { bg, fg, accent, accentText } = season.colors
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
+  useMotion(
+    containerRef,
+    (gsap, { full }) => {
+      /* ── Hero entrance (all tiers) ── */
+      gsap
+        .timeline({ delay: 0.2 })
+        .fromTo('.hero-line-top', { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: EASE.soft })
+        .fromTo('.hero-number', { opacity: 0, y: DIST.sm }, { opacity: 1, y: 0, duration: DUR.reveal, ease: EASE.soft }, '-=0.4')
+        .fromTo(
+          '.hero-title-wrap',
+          { opacity: 0, y: DIST.lg, scale: SCALE_IN },
+          { opacity: 1, y: 0, scale: 1, duration: DUR.story * 1.2, ease: EASE.cinematic },
+          '-=0.5',
+        )
+        .fromTo('.hero-tagline-text', { opacity: 0, y: DIST.md }, { opacity: 1, y: 0, duration: DUR.reveal, ease: EASE.out }, '-=0.9')
+        .fromTo('.hero-scroll-cue', { opacity: 0 }, { opacity: 1, duration: DUR.reveal }, '-=0.5')
 
-    const isMobile = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      || window.innerWidth < 768
+      gsap.to('.hero-mesh', {
+        yPercent: 20,
+        ease: 'none',
+        scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom top', scrub: true },
+      })
 
-    let ctx: { revert: () => void } | null = null
-
-    const init = async () => {
-      const { gsap } = await import('gsap')
-      const { ScrollTrigger } = await import('gsap/ScrollTrigger')
-      gsap.registerPlugin(ScrollTrigger)
-
-      ctx = gsap.context(() => {
-        /* ── Hero entrance ── */
-        const heroTl = gsap.timeline({ delay: 0.3 })
-
-        heroTl
-          .fromTo('.hero-line-top', { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: 'power2.out' })
-          .fromTo('.hero-number', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.2')
-          .fromTo(
-            '.hero-title-wrap',
-            { y: 100, opacity: 0, scale: 0.96 },
-            { y: 0, opacity: 1, scale: 1, duration: 1.5, ease: 'expo.out' },
-            '-=0.3',
-          )
-          .fromTo('.hero-tagline-text', { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: 'power3.out' }, '-=0.7')
-          .fromTo('.hero-scroll-cue', { opacity: 0 }, { opacity: 1, duration: 0.8 }, '-=0.3')
-
-        /* Hero parallax */
-        gsap.to('.hero-mesh', {
-          yPercent: 20,
-          ease: 'none',
-          scrollTrigger: { trigger: heroRef.current, start: 'top top', end: 'bottom top', scrub: true },
-        })
-
-        if (isMobile) {
-          gsap.utils.toArray<Element>('.reveal-item').forEach((el) => {
-            gsap.fromTo(el, { y: 40, opacity: 0 }, {
-              y: 0, opacity: 1, duration: 0.8, ease: 'power2.out',
-              scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' },
-            })
+      /* ── Bottle reveal: pinned and scrubbed on desktop, simple reveals on phones ── */
+      if (full) {
+        gsap
+          .timeline({
+            defaults: { ease: EASE.soft },
+            scrollTrigger: {
+              trigger: pinRef.current,
+              start: 'top top',
+              end: '+=250%',
+              pin: true,
+              scrub: 1.4,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
           })
-          return
-        }
-
-        /* ── Pinned bottle reveal ── */
-        const pinTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: pinRef.current,
-            start: 'top top',
-            end: '+=250%',
-            pin: true,
-            scrub: 1.4,
-            anticipatePin: 1,
+          .fromTo('.pin-ring-inner', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.8 }, 0)
+          .fromTo('.pin-ring-outer', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 1 }, 0.1)
+          .fromTo('.pin-bottle', { opacity: 0, scale: 0.6, y: DIST.lg * 2, rotation: -6 }, { opacity: 1, scale: 1, y: 0, rotation: 0, duration: 1.3 }, 0.1)
+          .fromTo('.pin-perfume-name', { opacity: 0, y: DIST.lg, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)', duration: 0.9 }, 0.4)
+          .fromTo('.pin-tagline', { opacity: 0, y: DIST.md }, { opacity: 1, y: 0, duration: 0.5 }, 0.6)
+          .fromTo('.pin-desc', { opacity: 0 }, { opacity: 1, duration: 0.5 }, 0.75)
+          .fromTo('.pin-note', { opacity: 0, x: -DIST.lg }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.1 }, 0.9)
+          .to('.pin-bottle', { rotation: 3, scale: 1.06, duration: 0.8, ease: EASE.inOut }, 1.4)
+          .to('.pin-ring-inner', { scale: 1.3, opacity: 0.34, duration: 0.6 }, 1.4)
+          .to('.pin-ring-outer', { scale: 1.4, opacity: 0.4, duration: 0.6 }, 1.4)
+      } else {
+        gsap.fromTo(
+          ['.pin-ring-inner', '.pin-ring-outer', '.pin-bottle'],
+          { opacity: 0, y: DIST.md },
+          {
+            opacity: 1, y: 0, duration: DUR.reveal, ease: EASE.out, stagger: STAGGER.card,
+            scrollTrigger: { trigger: '.pin-visual', start: 'top 85%', once: true },
           },
-        })
+        )
+        gsap.fromTo(
+          ['.pin-perfume-name', '.pin-tagline', '.pin-desc', '.pin-note'],
+          { opacity: 0, y: DIST.md },
+          {
+            opacity: 1, y: 0, duration: DUR.reveal, ease: EASE.out, stagger: STAGGER.tight,
+            scrollTrigger: { trigger: '.pin-copy', start: 'top 85%', once: true },
+          },
+        )
+      }
 
-        pinTl
-          .fromTo('.pin-glow-ring-inner', { opacity: 0, scale: 0 }, { opacity: 0.35, scale: 1, duration: 0.8 }, 0)
-          .fromTo('.pin-glow-ring-outer', { opacity: 0, scale: 0 }, { opacity: 0.15, scale: 1, duration: 1 }, 0.1)
-          .fromTo('.pin-bottle', { opacity: 0, scale: 0.2, y: 100, rotation: -10 }, { opacity: 1, scale: 1, y: 0, rotation: 0, duration: 1.3 }, 0.1)
-          .fromTo('.pin-perfume-name', { opacity: 0, y: 70, clipPath: 'inset(0 0 100% 0)' }, { opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)', duration: 0.9 }, 0.4)
-          .fromTo('.pin-tagline', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5 }, 0.6)
-          .fromTo('.pin-desc', { opacity: 0 }, { opacity: 0.75, duration: 0.5 }, 0.75)
-          .fromTo('.pin-note', { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.1 }, 0.9)
-          .to('.pin-bottle', { rotation: 4, scale: 1.1, duration: 0.8, ease: 'power2.inOut' }, 1.4)
-          .to('.pin-glow-ring-inner', { scale: 1.4, opacity: 0.12, duration: 0.6 }, 1.4)
-          .to('.pin-glow-ring-outer', { scale: 1.5, opacity: 0.06, duration: 0.6 }, 1.4)
+      /* ── Notes grid ── */
+      gsap.fromTo('.note-card', { opacity: 0, y: DIST.lg, scale: SCALE_IN }, {
+        opacity: 1, y: 0, scale: 1, duration: DUR.story, stagger: STAGGER.card, ease: EASE.out,
+        scrollTrigger: { trigger: '.notes-section', start: 'top 75%', once: true },
+      })
 
-        /* ── Notes grid ── */
-        gsap.fromTo('.note-card', { opacity: 0, y: 80, scale: 0.94 }, {
-          opacity: 1, y: 0, scale: 1, duration: 1, stagger: 0.15, ease: 'power3.out',
-          scrollTrigger: { trigger: '.notes-section', start: 'top 75%' },
-        })
+      /* ── Story ── */
+      const storyTrigger = { trigger: '.story-section', start: 'top 76%', once: true }
+      gsap.fromTo('.story-line', { scaleY: 0 }, { scaleY: 1, duration: DUR.story, ease: EASE.soft, transformOrigin: 'top', scrollTrigger: storyTrigger })
+      gsap.fromTo('.story-heading', { opacity: 0, y: DIST.md }, { opacity: 1, y: 0, duration: DUR.story, ease: EASE.out, scrollTrigger: storyTrigger })
+      gsap.fromTo('.story-body', { opacity: 0, y: DIST.md }, { opacity: 1, y: 0, duration: DUR.reveal, ease: EASE.soft, delay: 0.15, scrollTrigger: storyTrigger })
+      gsap.fromTo('.craft-text', { opacity: 0, x: -DIST.sm }, {
+        opacity: 1, x: 0, duration: DUR.reveal, ease: EASE.soft,
+        scrollTrigger: { trigger: '.craft-text', start: 'top 88%', once: true },
+      })
 
-        /* ── Story ── */
-        gsap.fromTo('.story-line', { scaleY: 0 }, {
-          scaleY: 1, duration: 1.4, ease: 'power2.out', transformOrigin: 'top',
-          scrollTrigger: { trigger: '.story-section', start: 'top 78%' },
-        })
-        gsap.fromTo('.story-heading', { opacity: 0, y: 60 }, {
-          opacity: 1, y: 0, duration: 1.1, ease: 'power3.out',
-          scrollTrigger: { trigger: '.story-section', start: 'top 75%' },
-        })
-        gsap.fromTo('.story-body', { opacity: 0, y: 30 }, {
-          opacity: 1, y: 0, duration: 0.9, ease: 'power2.out', delay: 0.15,
-          scrollTrigger: { trigger: '.story-section', start: 'top 75%' },
-        })
-        gsap.fromTo('.craft-text', { opacity: 0, x: -20 }, {
-          opacity: 1, x: 0, duration: 0.8,
-          scrollTrigger: { trigger: '.craft-text', start: 'top 85%' },
-        })
-
-        /* ── Other seasons ── */
-        gsap.fromTo('.other-season-card', { opacity: 0, y: 70, scale: 0.93 }, {
-          opacity: 1, y: 0, scale: 1, duration: 0.9, stagger: 0.12, ease: 'power3.out',
-          scrollTrigger: { trigger: '.other-seasons', start: 'top 80%' },
-        })
-      }, containerRef)
-    }
-
-    init()
-    return () => { ctx?.revert() }
-  }, [seasonKey])
-
-  const { bg, fg, accent, accentMuted } = season.colors
+      /* ── Other seasons ── */
+      gsap.fromTo('.other-season-card', { opacity: 0, y: DIST.lg, scale: SCALE_IN }, {
+        opacity: 1, y: 0, scale: 1, duration: DUR.reveal, stagger: STAGGER.card, ease: EASE.out,
+        scrollTrigger: { trigger: '.other-seasons', start: 'top 80%', once: true },
+      })
+    },
+    [seasonKey],
+  )
 
   return (
-    <div ref={containerRef} style={{ backgroundColor: bg, color: fg, minHeight: '100vh' }}>
-
+    <div
+      ref={containerRef}
+      className="screen"
+      style={{
+        backgroundColor: bg,
+        color: fg,
+        ['--accent-text' as string]: accentText,
+        ['--focus' as string]: accentText,
+      }}
+    >
       {/* ═══ Hero ═══ */}
       <section
         ref={heroRef}
+        className="screen"
         style={{
-          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -145,18 +142,20 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
           overflow: 'hidden',
         }}
       >
-        {/* Animated mesh background */}
-        <div className="mesh-bg hero-mesh" aria-hidden>
-          <div className="mesh-orb" style={{ background: `radial-gradient(circle, ${accent}1a 0%, transparent 65%)` }} />
-          <div className="mesh-orb" style={{ background: `radial-gradient(circle, ${accent}0d 0%, transparent 55%)` }} />
-          <div className="mesh-orb" style={{ background: `radial-gradient(circle, ${accent}10 0%, transparent 60%)` }} />
-        </div>
+        <MeshBackground
+          className="hero-mesh"
+          orbs={[
+            { background: `radial-gradient(circle, ${accent}1a 0%, transparent 65%)` },
+            { background: `radial-gradient(circle, ${accent}0d 0%, transparent 55%)` },
+            { background: `radial-gradient(circle, ${accent}10 0%, transparent 60%)` },
+          ]}
+        />
 
-        <FloatingParticles color={accent} count={22} />
+        <FloatingParticles color={accent} count={14} />
 
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '950px' }}>
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '950px', width: '100%' }}>
           <div
-            className="hero-line-top"
+            className="hero-line-top m-sx"
             style={{
               width: '80px',
               height: '1px',
@@ -166,29 +165,17 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
             }}
           />
 
-          <p
-            className="hero-number"
-            style={{
-              fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: 'clamp(0.5rem, 0.9vw, 0.6rem)',
-              letterSpacing: '0.5em',
-              textTransform: 'uppercase',
-              color: accent,
-              marginBottom: '2rem',
-              opacity: 0,
-            }}
-          >
+          <p className="hero-number eyebrow m-hide" style={{ letterSpacing: '0.45em', marginBottom: '2rem' }}>
             No. {season.number} — {season.name}
           </p>
 
-          <div className="hero-title-wrap" style={{ opacity: 0 }}>
+          <div className="hero-title-wrap m-hide">
             <h1
               style={{
-                fontFamily: 'var(--font-cormorant), Georgia, serif',
-                fontSize: 'clamp(5rem, 16vw, 15rem)',
+                fontSize: 'clamp(3rem, 13.5vw, 15rem)',
                 fontWeight: 300,
                 letterSpacing: '-0.05em',
-                lineHeight: 0.85,
+                lineHeight: 0.9,
                 color: fg,
               }}
             >
@@ -199,13 +186,11 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
           <Divider color={accent} style={{ margin: '1.5rem auto' }} />
 
           <p
-            className="hero-tagline-text"
+            className="hero-tagline-text m-hide"
             style={{
-              fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: 'clamp(0.75rem, 1.2vw, 0.9rem)',
+              fontSize: 'clamp(0.85rem, 1.2vw, 0.95rem)',
               letterSpacing: '0.1em',
               color: fg,
-              opacity: 0,
               maxWidth: '420px',
               margin: '0 auto',
               lineHeight: 1.7,
@@ -215,183 +200,116 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
           </p>
         </div>
 
-        {/* Scroll cue */}
         <div
-          className="hero-scroll-cue"
+          className="hero-scroll-cue m-hide"
           aria-hidden
           style={{
             position: 'absolute',
             bottom: '2.5rem',
             left: '50%',
-            transform: 'translateX(-50%)',
+            translate: '-50% 0',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             gap: '0.75rem',
           }}
         >
-          <span
-            style={{
-              fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: '0.45rem',
-              letterSpacing: '0.35em',
-              textTransform: 'uppercase',
-              color: fg,
-              opacity: 0.25,
-            }}
-          >
+          <span className="eyebrow" style={{ fontSize: '0.68rem', letterSpacing: '0.35em', color: fg, opacity: 0.6 }}>
             Explore
           </span>
           <div
-            style={{
-              width: '1px',
-              height: '55px',
-              background: `linear-gradient(to bottom, ${accent}88, transparent)`,
-              animation: 'lineGrow 1.8s ease infinite',
-            }}
+            className="scroll-cue-line"
+            style={{ width: '1px', height: '55px', background: `linear-gradient(to bottom, ${accent}, transparent)` }}
           />
         </div>
       </section>
 
-      {/* ═══ Pinned bottle reveal ═══ */}
+      {/* ═══ Bottle reveal ═══ */}
       <section
         ref={pinRef}
-        style={{
-          minHeight: '100vh',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          alignItems: 'center',
-          gap: 'clamp(2rem, 5vw, 5rem)',
-          padding: '0 clamp(16px, 8vw, 120px)',
-          position: 'relative',
-          overflow: 'hidden',
-        }}
-        className="bottle-pin"
+        className="screen pin-grid"
+        style={{ position: 'relative', overflow: 'hidden' }}
       >
-        {/* Background mesh */}
-        <div className="mesh-bg" aria-hidden>
-          <div className="mesh-orb" style={{ background: `radial-gradient(circle, ${accent}12 0%, transparent 60%)`, left: '40%', top: '20%' }} />
-          <div className="mesh-orb" style={{ background: `radial-gradient(circle, ${accent}08 0%, transparent 55%)`, left: '60%', top: '50%' }} />
-        </div>
+        <MeshBackground
+          orbs={[
+            { background: `radial-gradient(circle, ${accent}12 0%, transparent 60%)`, left: '40%', top: '20%' },
+            { background: `radial-gradient(circle, ${accent}08 0%, transparent 55%)`, left: '60%', top: '50%' },
+          ]}
+        />
 
-        {/* Text content */}
-        <div style={{ position: 'relative', zIndex: 1, maxWidth: '480px' }}>
+        <div className="pin-copy" style={{ position: 'relative', zIndex: 1, maxWidth: '480px' }}>
           <h2
-            className="pin-perfume-name"
+            className="pin-perfume-name m-hide"
             style={{
-              fontFamily: 'var(--font-cormorant), Georgia, serif',
               fontSize: 'clamp(2.8rem, 7vw, 6rem)',
               fontWeight: 300,
-              lineHeight: 0.92,
+              lineHeight: 0.95,
               color: fg,
               marginBottom: '1.2rem',
-              opacity: 0,
             }}
           >
             {season.perfume}
           </h2>
 
-          <p
-            className="pin-tagline"
-            style={{
-              fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: 'clamp(0.65rem, 1vw, 0.75rem)',
-              letterSpacing: '0.15em',
-              color: accent,
-              textTransform: 'uppercase',
-              marginBottom: '2.5rem',
-              opacity: 0,
-            }}
-          >
+          <p className="pin-tagline eyebrow m-hide" style={{ letterSpacing: '0.15em', marginBottom: '2.5rem' }}>
             {season.tagline}
           </p>
 
           <p
-            className="pin-desc"
+            className="pin-desc m-hide"
             style={{
-              fontSize: 'clamp(0.9rem, 1.3vw, 1rem)',
+              fontSize: 'clamp(0.95rem, 1.3vw, 1.05rem)',
               lineHeight: 1.9,
-              color: fg,
-              opacity: 0,
-              maxWidth: '400px',
-              marginBottom: '3.5rem',
+              color: `color-mix(in srgb, ${fg} 82%, transparent)`,
+              maxWidth: '420px',
+              marginBottom: '3rem',
             }}
           >
             {season.description}
           </p>
 
-          {(['top', 'heart', 'base'] as const).map((layer) => (
+          {LAYERS.map((layer) => (
             <div
               key={layer}
-              className="pin-note reveal-item"
-              style={{
-                display: 'flex',
-                gap: '1rem',
-                alignItems: 'baseline',
-                marginBottom: '0.85rem',
-                opacity: 0,
-              }}
+              className="pin-note m-hide"
+              style={{ display: 'flex', gap: '1rem', alignItems: 'baseline', marginBottom: '0.85rem' }}
             >
-              <span
-                style={{
-                  fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                  fontSize: '0.55rem',
-                  letterSpacing: '0.3em',
-                  textTransform: 'uppercase',
-                  color: accent,
-                  minWidth: '50px',
-                  opacity: 0.6,
-                }}
-              >
+              <span className="eyebrow" style={{ letterSpacing: '0.24em', minWidth: '64px' }}>
                 {layer}
               </span>
-              <span
-                style={{
-                  fontSize: '0.85rem',
-                  color: fg,
-                  opacity: 0.55,
-                  letterSpacing: '0.03em',
-                }}
-              >
+              <span style={{ fontSize: '0.9rem', color: fg, opacity: 0.78, letterSpacing: '0.03em' }}>
                 {season.notes[layer].join(' · ')}
               </span>
             </div>
           ))}
         </div>
 
-        {/* Bottle with glow rings */}
         <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative',
-            zIndex: 1,
-          }}
+          className="pin-visual"
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', position: 'relative', zIndex: 1 }}
         >
           <div
-            className="pin-glow-ring-inner"
+            className="pin-ring-inner m-hide decor"
+            aria-hidden
             style={{
               position: 'absolute',
               width: 'clamp(220px, 32vw, 380px)',
               height: 'clamp(220px, 32vw, 380px)',
               borderRadius: '50%',
-              border: `1px solid ${accent}`,
-              opacity: 0,
-              boxShadow: `0 0 100px ${accent}22, inset 0 0 80px ${accent}11`,
-              pointerEvents: 'none',
+              border: `1px solid ${accent}59`,
+              background: `radial-gradient(circle, ${accent}26 0%, transparent 70%)`,
+              boxShadow: `inset 0 0 80px ${accent}11`,
             }}
           />
           <div
-            className="pin-glow-ring-outer"
+            className="pin-ring-outer m-hide decor"
+            aria-hidden
             style={{
               position: 'absolute',
-              width: 'clamp(320px, 45vw, 520px)',
-              height: 'clamp(320px, 45vw, 520px)',
+              width: 'clamp(300px, 45vw, 520px)',
+              height: 'clamp(300px, 45vw, 520px)',
               borderRadius: '50%',
-              border: `1px solid ${accent}`,
-              opacity: 0,
-              pointerEvents: 'none',
+              border: `1px solid ${accent}26`,
             }}
           />
 
@@ -399,25 +317,19 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
             perfumeName={season.perfume}
             seasonName={season.name}
             accentColor={accent}
-            className="pin-bottle"
+            className="pin-bottle m-hide"
             style={{
-              width: 'clamp(160px, 22vw, 280px)',
+              width: 'clamp(150px, 22vw, 280px)',
               height: 'auto',
-              opacity: 0,
-              filter: `drop-shadow(0 50px 120px ${accent}55) drop-shadow(0 15px 40px rgba(0,0,0,0.3))`,
+              position: 'relative',
+              filter: `drop-shadow(0 24px 48px ${accent}40)`,
             }}
           />
         </div>
       </section>
 
       {/* ═══ Fragrance notes ═══ */}
-      <section
-        className="notes-section reveal-item"
-        style={{
-          padding: 'clamp(120px, 16vw, 220px) clamp(16px, 8vw, 120px)',
-          borderTop: `1px solid ${accent}10`,
-        }}
-      >
+      <section className="notes-section section" style={{ borderTop: `1px solid ${accent}1a` }}>
         <div
           style={{
             display: 'flex',
@@ -428,69 +340,52 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
             gap: '1rem',
           }}
         >
-          <p
-            style={{
-              fontFamily: 'var(--font-inter), system-ui, sans-serif',
-              fontSize: '0.55rem',
-              letterSpacing: '0.4em',
-              textTransform: 'uppercase',
-              color: accent,
-              opacity: 0.55,
-            }}
-          >
+          <h2 className="eyebrow" style={{ fontWeight: 400, letterSpacing: '0.32em' }}>
             Fragrance Composition
-          </p>
+          </h2>
           <p
             style={{
               fontFamily: 'var(--font-cormorant), Georgia, serif',
-              fontSize: 'clamp(0.9rem, 1.3vw, 1.1rem)',
+              fontSize: 'clamp(1rem, 1.3vw, 1.15rem)',
               fontStyle: 'italic',
               color: fg,
-              opacity: 0.25,
+              opacity: 0.65,
             }}
           >
             Three layers, one story
           </p>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-            gap: '4px',
-          }}
-        >
-          {(['top', 'heart', 'base'] as const).map((layer, idx) => (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(220px, 100%), 1fr))', gap: '4px' }}>
+          {LAYERS.map((layer, idx) => (
             <div
               key={layer}
-              className="note-card gradient-border-card"
+              className="note-card m-hide gradient-border-card"
               style={{
                 padding: '3.5rem 2.5rem',
-                background: `linear-gradient(145deg, ${accent}0a 0%, ${accent}04 100%)`,
-                position: 'relative',
-                backdropFilter: 'blur(10px)',
+                background: `linear-gradient(145deg, ${accent}0f 0%, ${accent}06 100%)`,
               }}
             >
-              {/* Accent bar */}
               <div
+                aria-hidden
                 style={{
                   position: 'absolute',
                   top: 0,
                   left: 0,
                   width: '2px',
                   height: '100%',
-                  background: `linear-gradient(to bottom, ${accent}88, transparent)`,
+                  background: `linear-gradient(to bottom, ${accent}, transparent)`,
+                  opacity: 0.55,
                 }}
               />
-
-              {/* Background number */}
               <span
+                aria-hidden
                 style={{
                   fontFamily: 'var(--font-cormorant), Georgia, serif',
                   fontSize: '5rem',
                   fontWeight: 300,
                   color: accent,
-                  opacity: 0.04,
+                  opacity: 0.08,
                   position: 'absolute',
                   top: '0.5rem',
                   right: '1.5rem',
@@ -500,25 +395,15 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
                 {String(idx + 1).padStart(2, '0')}
               </span>
 
-              <p
-                style={{
-                  fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                  fontSize: '0.5rem',
-                  letterSpacing: '0.35em',
-                  textTransform: 'uppercase',
-                  color: accent,
-                  marginBottom: '2rem',
-                  opacity: 0.6,
-                }}
-              >
+              <h3 className="eyebrow" style={{ fontWeight: 400, marginBottom: '2rem', letterSpacing: '0.28em' }}>
                 {layer} notes
-              </p>
+              </h3>
               {season.notes[layer].map((note) => (
                 <p
                   key={note}
                   style={{
                     fontFamily: 'var(--font-cormorant), Georgia, serif',
-                    fontSize: 'clamp(1.2rem, 2.2vw, 1.6rem)',
+                    fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)',
                     color: fg,
                     marginBottom: '0.6rem',
                     lineHeight: 1.3,
@@ -533,20 +418,10 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
       </section>
 
       {/* ═══ Story ═══ */}
-      <section
-        className="story-section reveal-item"
-        style={{
-          padding: 'clamp(120px, 16vw, 220px) clamp(16px, 8vw, 120px)',
-          display: 'grid',
-          gridTemplateColumns: '1fr min(60ch, 100%)',
-          gap: '4rem',
-          alignItems: 'start',
-          position: 'relative',
-        }}
-      >
+      <section className="story-section section split" style={{ position: 'relative' }}>
         <div>
           <div
-            className="story-line"
+            className="story-line m-sy"
             aria-hidden
             style={{
               width: '1px',
@@ -557,14 +432,8 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
             }}
           />
           <h2
-            className="story-heading"
-            style={{
-              fontFamily: 'var(--font-cormorant), Georgia, serif',
-              fontSize: 'clamp(2rem, 4vw, 3rem)',
-              fontWeight: 300,
-              color: fg,
-              lineHeight: 1.12,
-            }}
+            className="story-heading m-hide"
+            style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 300, color: fg, lineHeight: 1.12 }}
           >
             The Story
           </h2>
@@ -572,28 +441,27 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
 
         <div>
           <p
-            className="story-body"
+            className="story-body m-hide"
             style={{
-              fontSize: 'clamp(0.95rem, 1.4vw, 1.05rem)',
-              lineHeight: 2.1,
+              fontSize: 'clamp(1rem, 1.4vw, 1.08rem)',
+              lineHeight: 2,
               color: fg,
-              opacity: 0.65,
+              opacity: 0.82,
               marginBottom: '3rem',
             }}
           >
             {season.story}
           </p>
           <blockquote
-            className="craft-text"
+            className="craft-text m-hide"
             style={{
               fontFamily: 'var(--font-cormorant), Georgia, serif',
-              fontSize: 'clamp(1rem, 1.5vw, 1.2rem)',
+              fontSize: 'clamp(1.05rem, 1.5vw, 1.25rem)',
               fontStyle: 'italic',
               lineHeight: 1.8,
-              color: accent,
+              color: accentText,
               paddingLeft: '1.5rem',
-              borderLeft: `2px solid ${accent}44`,
-              opacity: 0.8,
+              borderLeft: `2px solid ${accent}66`,
             }}
           >
             {season.craft}
@@ -602,41 +470,19 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
       </section>
 
       {/* ═══ Other seasons ═══ */}
-      <section
-        className="other-seasons reveal-item"
-        style={{
-          padding: 'clamp(120px, 16vw, 220px) clamp(16px, 8vw, 120px)',
-          borderTop: `1px solid ${accent}0d`,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: 'var(--font-inter), system-ui, sans-serif',
-            fontSize: '0.55rem',
-            letterSpacing: '0.4em',
-            textTransform: 'uppercase',
-            color: accent,
-            opacity: 0.55,
-            marginBottom: '4rem',
-          }}
-        >
+      <section className="other-seasons section" style={{ borderTop: `1px solid ${accent}1a` }}>
+        <h2 className="eyebrow" style={{ fontWeight: 400, marginBottom: '4rem' }}>
           Continue the Journey
-        </p>
+        </h2>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '4px',
-          }}
-        >
+        <div className="grid-3">
           {otherSeasons.map((k) => {
             const s = SEASONS[k]
             return (
               <Link
                 key={k}
                 href={`/${k}`}
-                className="other-season-card luxury-card"
+                className="other-season-card m-hide luxury-card"
                 style={{
                   display: 'block',
                   padding: 'clamp(2.5rem, 5vw, 4rem) 2rem',
@@ -647,6 +493,7 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
                 }}
               >
                 <span
+                  aria-hidden
                   style={{
                     position: 'absolute',
                     top: '0.5rem',
@@ -655,36 +502,24 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
                     fontSize: 'clamp(3.5rem, 7vw, 6rem)',
                     fontWeight: 300,
                     color: '#fff',
-                    opacity: 0.04,
+                    opacity: 0.08,
                     lineHeight: 1,
-                    pointerEvents: 'none',
                   }}
                 >
                   {s.number}
                 </span>
 
-                <span
-                  style={{
-                    display: 'block',
-                    fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                    fontSize: '0.5rem',
-                    letterSpacing: '0.35em',
-                    textTransform: 'uppercase',
-                    color: '#fff',
-                    opacity: 0.45,
-                    marginBottom: '0.75rem',
-                  }}
-                >
+                <span className="eyebrow" style={{ display: 'block', color: '#fff', opacity: 0.75, marginBottom: '0.75rem', letterSpacing: '0.3em' }}>
                   No. {s.number}
                 </span>
                 <span
                   style={{
                     display: 'block',
                     fontFamily: 'var(--font-cormorant), Georgia, serif',
-                    fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+                    fontSize: 'clamp(2rem, 3.5vw, 2.5rem)',
                     fontWeight: 300,
                     color: '#fff',
-                    lineHeight: 0.95,
+                    lineHeight: 1,
                     marginBottom: '0.5rem',
                   }}
                 >
@@ -694,27 +529,17 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
                   style={{
                     display: 'block',
                     fontFamily: 'var(--font-cormorant), Georgia, serif',
-                    fontSize: 'clamp(0.85rem, 1.4vw, 1rem)',
+                    fontSize: 'clamp(1rem, 1.4vw, 1.1rem)',
                     fontStyle: 'italic',
                     color: '#fff',
-                    opacity: 0.55,
+                    opacity: 0.85,
                     marginBottom: '1.2rem',
                   }}
                 >
                   {s.perfume}
                 </span>
-                <div style={{ width: '28px', height: '1px', background: '#fff', opacity: 0.2, marginBottom: '1rem' }} />
-                <span
-                  style={{
-                    display: 'block',
-                    fontFamily: 'var(--font-inter), system-ui, sans-serif',
-                    fontSize: '0.55rem',
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    color: '#fff',
-                    opacity: 0.35,
-                  }}
-                >
+                <span aria-hidden style={{ display: 'block', width: '28px', height: '1px', background: '#fff', opacity: 0.35, marginBottom: '1rem' }} />
+                <span className="eyebrow" style={{ display: 'block', color: '#fff', opacity: 0.75, letterSpacing: '0.2em' }}>
                   Discover →
                 </span>
               </Link>
@@ -726,8 +551,8 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
       {/* ═══ Footer ═══ */}
       <footer
         style={{
-          padding: 'clamp(50px, 7vw, 80px) clamp(16px, 8vw, 120px)',
-          borderTop: `1px solid ${accent}0d`,
+          padding: 'clamp(50px, 7vw, 80px) var(--gutter)',
+          borderTop: `1px solid ${accent}1a`,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -735,27 +560,10 @@ export function SeasonPage({ seasonKey }: SeasonPageProps) {
           gap: '1rem',
         }}
       >
-        <span
-          style={{
-            fontFamily: 'var(--font-cormorant), Georgia, serif',
-            fontSize: '1.4rem',
-            letterSpacing: '0.2em',
-            color: fg,
-            opacity: 0.35,
-          }}
-        >
+        <span style={{ fontFamily: 'var(--font-cormorant), Georgia, serif', fontSize: '1.4rem', letterSpacing: '0.2em', color: fg, opacity: 0.7 }}>
           QUATRÉA
         </span>
-        <span
-          style={{
-            fontFamily: 'var(--font-inter), system-ui, sans-serif',
-            fontSize: '0.55rem',
-            color: fg,
-            opacity: 0.15,
-          }}
-        >
-          © 2024 Quatréa. All rights reserved.
-        </span>
+        <span style={{ fontSize: '0.75rem', color: fg, opacity: 0.6 }}>© 2026 Quatréa. All rights reserved.</span>
       </footer>
     </div>
   )

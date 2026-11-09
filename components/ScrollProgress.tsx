@@ -1,47 +1,42 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
+/** Reading-progress hairline. Animates transform only, once per frame. */
 export function ScrollProgress() {
   const barRef = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
 
   useEffect(() => {
-    const onScroll = () => {
-      if (!barRef.current) return
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
-      barRef.current.style.width = `${progress}%`
+    let raf = 0
+
+    const update = () => {
+      raf = 0
+      const bar = barRef.current
+      if (!bar) return
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
+      bar.style.transform = `scaleX(${progress})`
+    }
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(update)
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    schedule()
+
+    return () => {
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+      cancelAnimationFrame(raf)
+    }
+  }, [pathname])
 
   return (
-    <div
-      aria-hidden
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: '2px',
-        zIndex: 101,
-        background: 'transparent',
-        overflow: 'hidden',
-      }}
-    >
-      <div
-        ref={barRef}
-        style={{
-          height: '100%',
-          width: '0%',
-          background: 'linear-gradient(90deg, transparent, #C9A86C 30%, #E0C88C 60%, #C9A86C)',
-          willChange: 'width',
-        }}
-      />
+    <div aria-hidden className="scroll-progress decor">
+      <div ref={barRef} className="scroll-progress-bar" />
     </div>
   )
 }
