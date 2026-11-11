@@ -47,7 +47,38 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
         if (mine === generation) ScrollTrigger.refresh()
       })
 
+      // Lenis only smooths the wheel; route the scrolling keys through it too
+      // so they glide instead of jumping. Anything that needs the key itself
+      // (form fields, buttons, links, a stopped scroller) is left native.
+      const onKeyDown = (event: KeyboardEvent) => {
+        if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return
+        if (lenis.isStopped) return
+        const target = event.target as HTMLElement | null
+        if (target?.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return
+        if (event.key === ' ' && target?.closest('button, a[href], summary, [role="button"]')) return
+
+        const page = window.innerHeight * 0.85
+        let next: number
+        switch (event.key) {
+          case 'ArrowDown': next = lenis.scroll + 100; break
+          case 'ArrowUp': next = lenis.scroll - 100; break
+          case 'PageDown': next = lenis.scroll + page; break
+          case 'PageUp': next = lenis.scroll - page; break
+          case ' ': next = lenis.scroll + (event.shiftKey ? -page : page); break
+          case 'Home': next = 0; break
+          case 'End': next = lenis.limit; break
+          default: return
+        }
+        event.preventDefault()
+        const distance = Math.abs(next - lenis.scroll)
+        lenis.scrollTo(Math.max(0, Math.min(lenis.limit, next)), {
+          duration: Math.min(1.6, 0.5 + distance / 3000),
+        })
+      }
+      window.addEventListener('keydown', onKeyDown)
+
       teardown = () => {
+        window.removeEventListener('keydown', onKeyDown)
         gsap.ticker.remove(onTick)
         gsap.ticker.lagSmoothing(500, 33)
         setScroller(null)
